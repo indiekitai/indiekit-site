@@ -219,6 +219,7 @@ async def home():
         <div class="tool">
             <h3>📄 Doc2MD</h3>
             <p>PDF/Word/网页 → Markdown</p>
+            <p class="tool-stats">✨ URL 前缀模式：d.indiekit.ai/https/任意网址</p>
             <a href="https://d.indiekit.ai/docs">→ API 文档</a>
         </div>
     </div>
@@ -342,8 +343,8 @@ async def tools():
         </div>
         <div class="tool">
             <h3>📄 Doc2MD</h3>
-            <p>文档转 Markdown 服务。支持 PDF、Word、HTML、网页。专为 AI Agent 设计，自动适配 Cloudflare Markdown for Agents。</p>
-            <p class="tool-stats">📑 多格式支持 · 🤖 Agent 友好 · ⚡ REST + MCP</p>
+            <p>文档转 Markdown 服务。支持 PDF、Word、HTML、网页。URL 前缀模式：<code>d.indiekit.ai/https/任意网址</code>。三层转换管道 + markdown.new fallback。</p>
+            <p class="tool-stats">✨ URL 前缀 · 📑 多格式 · 🔄 自动 Fallback · ⚡ REST + MCP</p>
             <p><a href="https://d.indiekit.ai/docs" class="tool-link">→ API 文档</a></p>
         </div>
     </div>

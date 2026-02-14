@@ -1,7 +1,7 @@
 ---
 title: "Doc2MD：让 AI Agent 也能读文档"
 date: 2026-02-12
-description: "PDF、Word、网页一键转 Markdown。专为 AI Agent 设计的文档转换工具。"
+description: "PDF、Word、网页一键转 Markdown。三层转换管道，markdown.new 作为 fallback，确保高可用。"
 tags: ["工具", "AI", "MCP", "文档"]
 ---
 
@@ -22,6 +22,56 @@ Doc2MD 解决的就是这个问题。
 | HTML | Markdown |
 | 网页 URL | Markdown |
 
+## v0.2.0 新功能
+
+### URL 前缀模式
+
+像 [markdown.new](https://markdown.new) 一样使用：
+
+```
+https://d.indiekit.ai/https/example.com
+https://d.indiekit.ai/https/github.com
+```
+
+在任何 URL 前加上 `d.indiekit.ai/` 即可获取 Markdown。
+
+### 三层转换管道
+
+```
+1. Cloudflare Markdown for Agents（最快）
+   ↓
+2. 本地 HTML 转换
+   ↓
+3. markdown.new Fallback（最稳）
+```
+
+自动 fallback，确保高可用性。
+
+## 使用方式
+
+### 最简单：URL 前缀
+
+```bash
+curl https://d.indiekit.ai/https/example.com
+```
+
+### GET API
+
+```bash
+# 普通转换
+curl "https://d.indiekit.ai/convert/url?url=https://example.com"
+
+# 强制用 markdown.new
+curl "https://d.indiekit.ai/convert/url?url=https://example.com&prefer_new=true"
+```
+
+### 转换 PDF
+
+```bash
+curl -X POST https://d.indiekit.ai/convert/pdf \
+  -F "file=@document.pdf"
+```
+
 ## 为什么是 Markdown
 
 因为 AI Agent 爱 Markdown：
@@ -29,27 +79,6 @@ Doc2MD 解决的就是这个问题。
 - **结构清晰**：标题、列表、代码块
 - **Token 效率高**：比 HTML 省 80% token
 - **通用格式**：所有 AI 都能理解
-
-## API 使用
-
-```bash
-# 转换网页
-curl "https://d.indiekit.ai/convert/url?url=https://example.com"
-
-# 转换 PDF
-curl -X POST https://d.indiekit.ai/convert/pdf \
-  -F "file=@document.pdf"
-
-# 转换 Word
-curl -X POST https://d.indiekit.ai/convert/docx \
-  -F "file=@document.docx"
-```
-
-## Cloudflare Markdown for Agents
-
-Doc2MD 支持 Cloudflare 的新特性：如果目标网站启用了 Markdown for Agents，会直接返回 Markdown，不需要额外转换。
-
-这意味着更快的速度和更好的格式。
 
 ## MCP 集成
 
@@ -71,15 +100,27 @@ pip install indiekit-doc2md
 }
 ```
 
-然后对 Claude 说：「帮我把这个 PDF 转成 Markdown」
+### MCP 工具
+
+| 工具 | 描述 |
+|------|------|
+| `convert_url_to_markdown` | 转换 URL（支持 prefer_markdown_new） |
+| `fetch_via_markdown_new` | 直接用 markdown.new |
+| `convert_pdf_to_markdown` | 转换 PDF |
+| `convert_docx_to_markdown` | 转换 Word |
+
+对 Claude 说：「帮我把这个 PDF 转成 Markdown」
 
 ## 作为 Python 库
 
 ```python
 from doc2md import convert_url, convert_pdf
 
-# 转换网页
+# 转换网页（自动 fallback）
 md = await convert_url("https://example.com")
+
+# 强制用 markdown.new
+md = await convert_url("https://example.com", prefer_markdown_new=True)
 
 # 转换 PDF
 with open("doc.pdf", "rb") as f:
@@ -91,6 +132,10 @@ with open("doc.pdf", "rb") as f:
 - **AI 开发者**：让 Agent 能读取各种文档
 - **内容创作者**：快速把文档转成博客格式
 - **研究人员**：批量处理论文 PDF
+
+## 致谢
+
+感谢 [markdown.new](https://markdown.new) 提供的灵感和 fallback 服务。
 
 ---
 
