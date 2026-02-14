@@ -1,9 +1,11 @@
 ---
 title: "我用 AI 一晚上做了 5 个 SaaS 工具"
-date: "2026-02-13"
+date: 2026-02-05
 description: "从零开始，3 小时内用 AI 构建 5 个完整的 SaaS 工具，总计 2300+ 行代码。这是我的经验分享。"
 tags: ["AI", "独立开发", "SaaS", "Claude"]
 ---
+
+> **🔄 更新 (2026-02-13)**：IndieKit 现已扩展到 **8 个工具**，总计 7000+ 行代码，全部开源并发布到 [PyPI](https://pypi.org/search/?q=indiekit) 和 [GitHub](https://github.com/indiekitai)。新增了 AI 客服、文档转换、MCP Server 等。
 
 凌晨 2 点，我决定做个实验：能不能用 AI 在一晚上做出几个可用的 SaaS 工具？
 

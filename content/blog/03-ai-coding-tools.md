@@ -1,6 +1,6 @@
 ---
 title: "2026 年 AI 编程工具横评：Claude Code vs Cursor vs Copilot"
-date: "2026-02-13"
+date: 2026-02-12
 description: "用 AI 写代码已经是标配了，但哪个工具最好用？这是我的实测对比。"
 tags: ["AI", "编程工具", "Claude", "Cursor", "Copilot"]
 ---

@@ -57,6 +57,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
     <title>{title} | {SITE_NAME}</title>
     <meta name="description" content="{description or SITE_DESC}">
     <link rel="canonical" href="{canonical or SITE_URL}">
+    <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} RSS" href="{SITE_URL}/feed.xml">
     
     <!-- Open Graph -->
     <meta property="og:title" content="{title}">
@@ -68,6 +69,19 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{title}">
     <meta name="twitter:description" content="{description or SITE_DESC}">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QHNTKJ27T"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){{dataLayer.push(arguments);}}
+        gtag('js', new Date());
+        gtag('config', 'G-1QHNTKJ27T');
+    </script>
+    
+    <!-- Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
     <style>
         * {{ box-sizing: border-box; }}
@@ -107,6 +121,12 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
         .tool {{ background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }}
         .tool h3 {{ margin: 0 0 10px; }}
         .tool a {{ color: #0066cc; text-decoration: none; }}
+        .tool-stats {{ font-size: 0.85em; color: #666; margin: 10px 0; }}
+        .tool-link {{ display: inline-block; margin-top: 5px; font-weight: 500; }}
+        .tool:hover {{ box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: box-shadow 0.2s; }}
+        .share-buttons {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }}
+        .share-buttons a {{ margin-left: 10px; color: #0066cc; text-decoration: none; }}
+        .share-buttons a:hover {{ text-decoration: underline; }}
         footer {{ text-align: center; color: #666; font-size: 0.9em; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }}
     </style>
 </head>
@@ -117,7 +137,9 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
             <a href="/">首页</a>
             <a href="/blog">博客</a>
             <a href="/tools">工具</a>
+            <a href="/mcp">MCP</a>
             <a href="/about">关于</a>
+            <a href="https://github.com/indiekitai/indiekit-site/issues/new?labels=feedback&title=Feedback:" target="_blank">💬 反馈</a>
         </nav>
     </header>
     <main>
@@ -125,7 +147,13 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
     </main>
     <footer>
         <p>© 2026 IndieKit.ai - Built by an AI, for indie hackers</p>
+        <p>
+            <a href="https://github.com/indiekitai" target="_blank">GitHub</a> · 
+            <a href="https://x.com/indiekitai" target="_blank">Twitter</a> · 
+            <a href="https://github.com/indiekitai/indiekit-site/issues/new?labels=feedback" target="_blank">反馈建议</a>
+        </p>
     </footer>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>'''
 
@@ -148,7 +176,7 @@ async def home():
     <article>
         <h1>独立开发者的 AI 工具包</h1>
         <p>IndieKit 是一套为独立开发者打造的轻量级工具集合。所有工具都是开源的，你可以免费使用或自行部署。</p>
-        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 5 个工具和这个博客。</p>
+        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 8 个工具和这个博客。</p>
     </article>
     
     <h2>🔧 工具</h2>
@@ -177,6 +205,21 @@ async def home():
             <h3>📋 Quick Paste</h3>
             <p>代码分享 + 语法高亮</p>
             <a href="https://p.indiekit.ai">→ 访问</a>
+        </div>
+        <div class="tool">
+            <h3>🤖 AI CS SaaS</h3>
+            <p>多租户 AI 客服 + RAG 检索</p>
+            <a href="https://cs.indiekit.ai/docs">→ API 文档</a>
+        </div>
+        <div class="tool" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h3>🔌 MCP Server</h3>
+            <p>让 AI Agent 直接调用工具</p>
+            <a href="/mcp" style="color: white;">→ 了解更多</a>
+        </div>
+        <div class="tool">
+            <h3>📄 Doc2MD</h3>
+            <p>PDF/Word/网页 → Markdown</p>
+            <a href="https://d.indiekit.ai/docs">→ API 文档</a>
         </div>
     </div>
     
@@ -224,53 +267,173 @@ async def blog_post(slug: str):
     md.reset()
     html_content = md.convert(post['content'])
     
+    # 阅读时间：中文 400 字/分钟，英文 200 词/分钟
+    word_count = len(post['content'])
+    read_time = max(1, round(word_count / 400))
+    
+    post_url = f"{SITE_URL}/blog/{slug}"
+    share_text = post['title'].replace('"', '&quot;')
+    
     content = f'''
     <article>
         <h1>{post['title']}</h1>
-        <div class="meta">{post['date']} · {', '.join(post['tags']) if post['tags'] else '未分类'}</div>
+        <div class="meta">{post['date']} · {read_time} 分钟阅读 · {', '.join(post['tags']) if post['tags'] else '未分类'}</div>
         {html_content}
+        <div class="share-buttons">
+            <span>分享到：</span>
+            <a href="https://twitter.com/intent/tweet?text={share_text}&url={post_url}" target="_blank" rel="noopener">Twitter</a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={post_url}&title={share_text}" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://news.ycombinator.com/submitlink?u={post_url}&t={share_text}" target="_blank" rel="noopener">HN</a>
+        </div>
     </article>
     '''
     
-    return render_html(post['title'], content, post['description'], f"{SITE_URL}/blog/{slug}")
+    return render_html(post['title'], content, post['description'], post_url)
 
 
 @app.get("/tools", response_class=HTMLResponse)
 async def tools():
     content = '''
     <h1>工具</h1>
-    <p>所有工具都是免费使用的，代码开源在 GitHub。</p>
+    <p>所有工具都是免费使用的。轻量、快速、无需注册。</p>
     
     <div class="tools">
         <div class="tool">
             <h3>📰 HN Digest</h3>
             <p>AI 自动抓取 Hacker News 热门文章，生成中文摘要。每天更新，帮你快速了解科技圈动态。</p>
-            <p><a href="https://hn.indiekit.ai">→ 访问工具</a></p>
+            <p class="tool-stats">🔄 每日更新 · 📖 AI 中文摘要 · ⏱️ 节省 30 分钟/天</p>
+            <p><a href="https://hn.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
         <div class="tool">
             <h3>📊 Uptime Ping</h3>
             <p>监控你的 API 和网站是否正常运行。支持 Telegram 告警，服务挂了第一时间通知你。</p>
-            <p><a href="https://up.indiekit.ai">→ 访问工具</a></p>
+            <p class="tool-stats">⏱️ 1 分钟检测间隔 · 📱 Telegram 告警 · 📈 可用率统计</p>
+            <p><a href="https://up.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
         <div class="tool">
-            <h3>🔗 Webhook Relay</h3>
+            <h3>🔔 Webhook Relay</h3>
             <p>接收来自 GitHub、Stripe 等服务的 Webhook，转发到你的 Telegram。再也不用盯着后台看了。</p>
-            <p><a href="https://hook.indiekit.ai">→ 访问工具</a></p>
+            <p class="tool-stats">🔗 一键创建端点 · 📱 即时通知 · 📝 请求日志</p>
+            <p><a href="https://hook.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
         <div class="tool">
             <h3>🔗 Tiny Link</h3>
             <p>自托管的短链接服务。支持点击统计、自定义短码。你的数据你做主。</p>
-            <p><a href="https://s.indiekit.ai">→ 访问工具</a></p>
+            <p class="tool-stats">📊 点击统计 · ✏️ 自定义短码 · 🔒 数据自主</p>
+            <p><a href="https://s.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
         <div class="tool">
             <h3>📋 Quick Paste</h3>
             <p>代码分享工具，支持语法高亮、阅后即焚。分享代码片段的最佳选择。</p>
-            <p><a href="https://p.indiekit.ai">→ 访问工具</a></p>
+            <p class="tool-stats">🎨 语法高亮 · ⏰ 自动过期 · 📦 无需登录</p>
+            <p><a href="https://p.indiekit.ai" class="tool-link">→ 访问工具</a></p>
+        </div>
+        <div class="tool">
+            <h3>🤖 AI CS SaaS</h3>
+            <p>多租户 AI 客服系统。上传知识库，一行代码嵌入 Widget，让你的网站拥有智能客服。</p>
+            <p class="tool-stats">🧠 RAG 语义检索 · 💬 流式响应 · 🏢 多租户隔离</p>
+            <p><a href="https://cs.indiekit.ai/docs" class="tool-link">→ API 文档</a></p>
+        </div>
+        <div class="tool" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h3>🔌 MCP Server</h3>
+            <p>让 AI Agent 直接使用 IndieKit 工具。支持 Claude Desktop、Cursor 等 MCP 兼容客户端。</p>
+            <p class="tool-stats" style="color: rgba(255,255,255,0.9);">🤖 7 个工具 · 🔗 标准协议 · ⚡ 即装即用</p>
+            <p><a href="/mcp" class="tool-link" style="color: white;">→ 了解更多</a></p>
+        </div>
+        <div class="tool">
+            <h3>📄 Doc2MD</h3>
+            <p>文档转 Markdown 服务。支持 PDF、Word、HTML、网页。专为 AI Agent 设计，自动适配 Cloudflare Markdown for Agents。</p>
+            <p class="tool-stats">📑 多格式支持 · 🤖 Agent 友好 · ⚡ REST + MCP</p>
+            <p><a href="https://d.indiekit.ai/docs" class="tool-link">→ API 文档</a></p>
         </div>
     </div>
+    
+    <h2>技术栈</h2>
+    <p>每个工具都是独立的 Python + FastAPI 应用。追求极简。</p>
+    <p>总代码量：<strong>~7,000 行</strong>，AI 辅助开发。</p>
     '''
     
     return render_html("工具", content, "免费开源的独立开发者工具集合", f"{SITE_URL}/tools")
+
+
+@app.get("/mcp", response_class=HTMLResponse)
+async def mcp_page():
+    content = '''
+    <article>
+        <h1>🔌 IndieKit MCP Server</h1>
+        <p class="lead">让 AI Agent 直接使用 IndieKit 工具。基于 <a href="https://modelcontextprotocol.io">Model Context Protocol</a> 标准。</p>
+        
+        <h2>什么是 MCP？</h2>
+        <p>MCP (Model Context Protocol) 是 Anthropic 推出的开放协议，定义了 AI 和外部工具之间的标准通信方式。到 2026 年初已成为事实标准，OpenAI、Google、Microsoft 全部跟进。</p>
+        <p>简单说：<strong>MCP 让 AI 能直接调用你的工具，不需要人工操作界面。</strong></p>
+        
+        <h2>安装</h2>
+        <pre><code class="language-bash"># 使用 pip
+pip install indiekit-mcp
+
+# 或使用 uv
+uv pip install indiekit-mcp</code></pre>
+        
+        <h2>配置 Claude Desktop</h2>
+        <p>编辑配置文件：</p>
+        <ul>
+            <li>macOS: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+            <li>Windows: <code>%APPDATA%\\Claude\\claude_desktop_config.json</code></li>
+        </ul>
+        <pre><code class="language-json">{
+  "mcpServers": {
+    "indiekit": {
+      "command": "indiekit-mcp"
+    }
+  }
+}</code></pre>
+        <p>重启 Claude Desktop 即可使用。</p>
+        
+        <h2>可用工具</h2>
+        <table>
+            <thead>
+                <tr><th>工具</th><th>功能</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>hn_digest</code></td><td>获取 Hacker News 每日中文摘要</td></tr>
+                <tr><td><code>uptime_check</code></td><td>检查网站/API 是否在线</td></tr>
+                <tr><td><code>uptime_status</code></td><td>获取所有监控端点状态</td></tr>
+                <tr><td><code>shorten_url</code></td><td>创建短链接</td></tr>
+                <tr><td><code>get_link_stats</code></td><td>获取短链接点击统计</td></tr>
+                <tr><td><code>create_paste</code></td><td>创建代码片段分享</td></tr>
+                <tr><td><code>get_paste</code></td><td>获取代码片段内容</td></tr>
+            </tbody>
+        </table>
+        
+        <h2>使用示例</h2>
+        <p>配置好后，直接对 Claude 说：</p>
+        <ul>
+            <li>"帮我看看今天 Hacker News 有什么热门"</li>
+            <li>"检查一下 https://example.com 是否在线"</li>
+            <li>"把这个链接缩短：https://very-long-url.com/..."</li>
+            <li>"帮我创建一个 Python 代码片段"</li>
+        </ul>
+        <p>Claude 会自动调用对应的 IndieKit 工具，返回结果。</p>
+        
+        <h2>为什么需要 MCP？</h2>
+        <blockquote>
+            <p>"PC 软件为手机重做了一遍，现在轮到 Agent 了。"</p>
+            <p>— <a href="https://twitter.com/dotey">@dotey</a></p>
+        </blockquote>
+        <p>GUI 是给人用的，Agent 需要结构化的接口。MCP 就是给 Agent 开的正门，比让 AI 模拟点击界面高效 10 倍。</p>
+        
+        <h2>源码</h2>
+        <p><a href="https://github.com/indiekitai/indiekit-mcp">github.com/indiekitai/indiekit-mcp</a></p>
+        
+        <h2>其他 MCP Server</h2>
+        <ul>
+            <li><a href="https://github.com/indiekitai/notion-mcp">notion-mcp</a> - 让 Agent 管理你的 Notion</li>
+            <li><a href="https://github.com/indiekitai/doc2md">doc2md</a> - 文档转 Markdown（含 MCP Server）</li>
+        </ul>
+    </article>
+    '''
+    
+    return render_html("MCP Server", content, "IndieKit MCP Server - 让 AI Agent 直接使用 IndieKit 工具", f"{SITE_URL}/mcp")
 
 
 @app.get("/about", response_class=HTMLResponse)
@@ -281,7 +444,7 @@ async def about():
         <p>IndieKit 是一个由 AI 驱动的独立开发者工具集合。</p>
         
         <h2>起源</h2>
-        <p>2026 年 2 月 13 日凌晨，一个 AI 助手在 3 小时内构建了 5 个完整的 SaaS 工具，总计 2300+ 行代码。这就是 IndieKit 的起点。</p>
+        <p>2026 年 2 月 13 日，一个 AI 助手用一天时间构建了 8 个完整的工具，总计 7000+ 行代码，全部开源并发布到 PyPI。这就是 IndieKit。</p>
         
         <h2>理念</h2>
         <ul>
@@ -301,8 +464,8 @@ async def about():
         <h2>联系</h2>
         <p>有问题或建议？欢迎通过以下方式联系：</p>
         <ul>
-            <li>Twitter: <a href="https://twitter.com/indiekit">@indiekit</a></li>
-            <li>GitHub: <a href="https://github.com/indiekit">github.com/indiekit</a></li>
+            <li>Twitter: <a href="https://twitter.com/indiekitai">@indiekitai</a></li>
+            <li>GitHub: <a href="https://github.com/indiekitai">github.com/indiekitai</a></li>
         </ul>
     </article>
     '''
@@ -324,6 +487,7 @@ async def sitemap():
         f"<url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>",
         f"<url><loc>{SITE_URL}/blog</loc><changefreq>daily</changefreq><priority>0.8</priority></url>",
         f"<url><loc>{SITE_URL}/tools</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>",
+        f"<url><loc>{SITE_URL}/mcp</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>",
         f"<url><loc>{SITE_URL}/about</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>",
     ]
     
@@ -336,6 +500,53 @@ async def sitemap():
 </urlset>'''
     
     from fastapi.responses import Response
+    return Response(content=xml, media_type="application/xml")
+
+
+# RSS Feed
+@app.get("/feed.xml")
+@app.get("/rss.xml")
+async def rss_feed():
+    from fastapi.responses import Response
+    posts = load_posts()
+    
+    items = []
+    for p in posts[:20]:  # Last 20 posts
+        pub_date = ""
+        if p.get("date"):
+            try:
+                d = p["date"]
+                if isinstance(d, str):
+                    d = datetime.strptime(d, "%Y-%m-%d")
+                pub_date = d.strftime("%a, %d %b %Y 00:00:00 GMT")
+            except:
+                pub_date = ""
+        
+        # Escape XML special chars
+        title = str(p.get("title", "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        desc = str(p.get("description", "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        
+        items.append(f"""
+    <item>
+      <title>{title}</title>
+      <link>{SITE_URL}/blog/{p['slug']}</link>
+      <description>{desc}</description>
+      <guid>{SITE_URL}/blog/{p['slug']}</guid>
+      {f'<pubDate>{pub_date}</pubDate>' if pub_date else ''}
+    </item>""")
+    
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{SITE_NAME}</title>
+    <link>{SITE_URL}</link>
+    <description>{SITE_DESC}</description>
+    <language>zh-CN</language>
+    <atom:link href="{SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+    {''.join(items)}
+  </channel>
+</rss>"""
+    
     return Response(content=xml, media_type="application/xml")
 
 
@@ -377,15 +588,50 @@ async def llms_txt():
 
 > 独立开发者的 AI 工具包 - Resources for Indie Hackers
 
-IndieKit 是一套为独立开发者打造的轻量级工具集合，由 AI 在一晚上构建完成。
+IndieKit 是一套为独立开发者打造的轻量级工具集合。
 
-## 工具
+## 工具列表
 
-- HN Digest: AI 生成的中文 Hacker News 每日精选 - https://hn.indiekit.ai
-- Uptime Ping: API 健康监控 + Telegram 告警 - https://up.indiekit.ai  
-- Webhook Relay: 接收 Webhook 转发到 Telegram - https://hook.indiekit.ai
-- Tiny Link: 短链接服务 + 点击统计 - https://s.indiekit.ai
-- Quick Paste: 代码分享 + 语法高亮 - https://p.indiekit.ai
+### 1. HN Digest (https://hn.indiekit.ai)
+AI 生成的中文 Hacker News 每日精选。自动抓取热门文章并生成摘要。
+
+### 2. Uptime Ping (https://up.indiekit.ai)
+API 健康监控服务。支持 1 分钟检测间隔，Telegram 告警。
+
+### 3. Webhook Relay (https://hook.indiekit.ai)
+接收任意 Webhook 并转发到 Telegram。适合 GitHub、Stripe 等服务通知。
+
+### 4. Tiny Link (https://s.indiekit.ai)
+短链接服务。支持点击统计和自定义短码。
+
+### 5. Quick Paste (https://p.indiekit.ai)
+代码分享工具。支持语法高亮和自动过期。
+
+### 6. AI CS SaaS (https://cs.indiekit.ai)
+多租户 AI 客服系统。基于 RAG 的智能问答，一行代码嵌入网站。
+
+**API 文档**: https://cs.indiekit.ai/docs
+
+**快速开始**:
+```bash
+# 1. 注册租户
+curl -X POST https://cs.indiekit.ai/api/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{{"tenant_name":"My Company","tenant_slug":"my-co","admin_email":"admin@example.com","admin_password":"password123","admin_name":"Admin"}}'
+# 返回: {{"tenant_id":1,"api_key":"sk_xxx","access_token":"eyJ..."}}
+
+# 2. 上传知识库
+curl -X POST https://cs.indiekit.ai/api/knowledge \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{{"title":"退款政策","content":"30天无条件退款...","category":"售后"}}'
+
+# 3. 测试问答
+curl -X POST https://cs.indiekit.ai/api/chat/send \\
+  -H "X-API-Key: <api_key>" \\
+  -H "Content-Type: application/json" \\
+  -d '{{"message":"怎么退款?","customer_id":"visitor_1"}}'
+```
 
 ## 博客文章
 
@@ -394,13 +640,10 @@ IndieKit 是一套为独立开发者打造的轻量级工具集合，由 AI 在�
 ## 技术栈
 
 - Python + FastAPI
-- JSON 文件存储
+- PostgreSQL + pgvector (AI CS SaaS)
+- JSON 文件存储 (其他工具)
+- Gemini API (LLM + Embedding)
 - Cloudflare (DNS/CDN/SSL)
-- DigitalOcean
-
-## API 端点
-
-所有工具都提供 REST API，返回 JSON 格式数据。
 
 ## 联系
 
@@ -440,3 +683,4 @@ async def llms_full():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8085)
+# This will be patched into the tools section
