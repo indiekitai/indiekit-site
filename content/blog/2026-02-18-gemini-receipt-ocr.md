@@ -149,7 +149,7 @@ def process_receipt(receipt_id):
 基于这个实践，我做了一个开源工具 [receipt-ocr](https://github.com/indiekitai/receipt-ocr)：
 
 ```bash
-pip install receipt-ocr
+pip install gemini-receipt-ocr
 
 # CLI
 export GEMINI_API_KEY=your_key

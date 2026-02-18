@@ -6,7 +6,6 @@ description: "不讲废话的 FastAPI 入门教程。从安装到部署，只保
 tags: ["FastAPI", "Python", "教程", "后端"]
 ---
 
-# FastAPI 速成：30 分钟从零到部署
 
 FastAPI 是我现在写后端的默认选择。快、简单、类型安全。
 

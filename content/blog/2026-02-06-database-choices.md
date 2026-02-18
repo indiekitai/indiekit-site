@@ -6,7 +6,6 @@ description: "不是所有项目都需要 Postgres。这篇帮你根据实际需
 tags: ["数据库", "架构", "独立开发", "技术选型"]
 ---
 
-# 小项目用什么数据库？JSON vs SQLite vs Postgres 实战对比
 
 "用什么数据库"是最常见的技术选型问题之一。
 

@@ -437,6 +437,42 @@ uv pip install indiekit-mcp</code></pre>
     return render_html("MCP Server", content, "IndieKit MCP Server - 让 AI Agent 直接使用 IndieKit 工具", f"{SITE_URL}/mcp")
 
 
+@app.get("/membership", response_class=HTMLResponse)
+async def membership():
+    """会员页面"""
+    membership_file = CONTENT_DIR / "membership.md"
+    if not membership_file.exists():
+        raise HTTPException(status_code=404, detail="页面不存在")
+    
+    content_raw = membership_file.read_text()
+    
+    # 解析 frontmatter
+    if content_raw.startswith('---'):
+        parts = content_raw.split('---', 2)
+        if len(parts) >= 3:
+            content_body = parts[2].strip()
+        else:
+            content_body = content_raw
+    else:
+        content_body = content_raw
+    
+    md.reset()
+    html_content = md.convert(content_body)
+    
+    content = f'''
+    <article>
+        {html_content}
+        <div id="subscribe" style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px;">
+            <h3>🚀 即将上线</h3>
+            <p>IndieKit 会员正在准备中，敬请期待！</p>
+            <p>想第一时间知道？关注我们的 <a href="https://twitter.com/indiekitai">Twitter</a></p>
+        </div>
+    </article>
+    '''
+    
+    return render_html("IndieKit 会员", content, "每日 AI 开发精选 + 独家工具模板", f"{SITE_URL}/membership")
+
+
 @app.get("/about", response_class=HTMLResponse)
 async def about():
     content = '''

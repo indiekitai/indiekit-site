@@ -6,7 +6,6 @@ description: "完整的 AI 客服 SaaS 架构解析：多租户隔离、RAG 语�
 tags: ["AI", "RAG", "SaaS", "架构", "开源"]
 ---
 
-# 从零构建多租户 AI 客服系统
 
 AI 客服是最直接的 LLM 落地场景之一。
 

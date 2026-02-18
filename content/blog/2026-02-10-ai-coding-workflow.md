@@ -6,7 +6,6 @@ description: "不是炫耀，是分享方法。从想法到上线的完整 AI �
 tags: ["AI编程", "Claude", "工作流", "教程"]
 ---
 
-# 我用 AI 一晚上写了 5 个 SaaS 工具的完整流程
 
 不是标题党。[这5个工具](/blog/build-5-saas-in-one-night/)真的在一个晚上完成，而且现在都在线运行。
 

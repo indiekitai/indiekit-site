@@ -6,7 +6,6 @@ description: "不需要 Docker，不需要 K8s。一个 systemd unit 文件就�
 tags: ["部署", "systemd", "Python", "Linux"]
 ---
 
-# 用 systemd 部署 Python 服务：最简单的生产方案
 
 很多人一上来就想用 Docker、K8s。
 
