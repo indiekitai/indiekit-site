@@ -1,12 +1,6 @@
----
-title: "用 Gemini 做票据识别：从图片到结构化数据的实战"
-slug: gemini-receipt-ocr
-date: 2026-02-19
-description: "餐饮系统的财务模块需要自动识别员工上传的票据。传统 OCR 识别率差、字段提取难，试了下 Gemini，效果出奇的好。"
-tags: ["AI", "Gemini", "OCR", "实战"]
----
+# 用 Gemini 做票据识别：从图片到结构化数据的实战
 
-餐饮系统的财务模块需要自动识别员工上传的票据。传统 OCR 识别率差、字段提取难，试了下 Gemini，效果出奇的好。
+> 餐饮系统的财务模块需要自动识别员工上传的票据。传统 OCR 识别率差、字段提取难，试了下 Gemini，效果出奇的好。
 
 ## 需求场景
 
@@ -150,7 +144,3 @@ def process_receipt(receipt_id):
 
 ❌ 超高准确率要求（金融审计）
 ❌ 海量数据
-
----
-
-代码已开源：[receipt-ocr](https://github.com/indiekitai/receipt-ocr)
