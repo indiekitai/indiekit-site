@@ -138,6 +138,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
             <a href="/blog">博客</a>
             <a href="/tools">工具</a>
             <a href="/mcp">MCP</a>
+            <a href="/api">API</a>
             <a href="/about">关于</a>
             <a href="https://github.com/indiekitai/indiekit-site/issues/new?labels=feedback&title=Feedback:" target="_blank">💬 反馈</a>
         </nav>
@@ -471,6 +472,26 @@ async def membership():
     '''
     
     return render_html("IndieKit 会员", content, "每日 AI 开发精选 + 独家工具模板", f"{SITE_URL}/membership")
+
+
+@app.get("/api", response_class=HTMLResponse)
+async def api_docs():
+    """API 文档页面"""
+    api_file = Path("/root/source/side-projects/API.md")
+    if not api_file.exists():
+        raise HTTPException(status_code=404, detail="API 文档不存在")
+    
+    content_raw = api_file.read_text()
+    md.reset()
+    html_content = md.convert(content_raw)
+    
+    content = f'''
+    <article>
+        {html_content}
+    </article>
+    '''
+    
+    return render_html("API Reference", content, "IndieKit API 文档 - 所有服务的 JSON API 接口", f"{SITE_URL}/api")
 
 
 @app.get("/about", response_class=HTMLResponse)
