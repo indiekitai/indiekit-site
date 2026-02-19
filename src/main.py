@@ -223,6 +223,11 @@ async def home():
             <p class="tool-stats">✨ URL 前缀模式：d.indiekit.ai/https/任意网址</p>
             <a href="https://d.indiekit.ai/docs">→ API 文档</a>
         </div>
+        <div class="tool">
+            <h3>🐘 PG Health</h3>
+            <p>PostgreSQL 健康检查 + 优化建议</p>
+            <a href="https://pg.indiekit.ai">→ 访问</a>
+        </div>
     </div>
     
     <h2>📝 最新文章</h2>
@@ -347,6 +352,12 @@ async def tools():
             <p>文档转 Markdown 服务。支持 PDF、Word、HTML、网页。URL 前缀模式：<code>d.indiekit.ai/https/任意网址</code>。三层转换管道 + markdown.new fallback。</p>
             <p class="tool-stats">✨ URL 前缀 · 📑 多格式 · 🔄 自动 Fallback · ⚡ REST + MCP</p>
             <p><a href="https://d.indiekit.ai/docs" class="tool-link">→ API 文档</a></p>
+        </div>
+        <div class="tool">
+            <h3>🐘 PG Health</h3>
+            <p>PostgreSQL 数据库健康检查。检测缓存命中率、未使用索引、慢查询、连接数等问题，给出优化建议。</p>
+            <p class="tool-stats">🔍 9 项检查 · 📊 JSON API · 🔒 连接串不存储</p>
+            <p><a href="https://pg.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
     </div>
     
