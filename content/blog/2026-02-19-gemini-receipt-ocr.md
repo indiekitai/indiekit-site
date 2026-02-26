@@ -1,7 +1,7 @@
 ---
 title: "用 Gemini 做票据识别：从图片到结构化数据的实战"
 date: "2026-02-19"
-category: "技术"
+tags: ["AI", "OCR", "Gemini", "餐饮"]
 ---
 
 

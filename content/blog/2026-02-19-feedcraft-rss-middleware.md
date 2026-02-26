@@ -1,7 +1,7 @@
 ---
 title: "FeedCraft：用 AI 增强你的 RSS 订阅"
 date: "2026-02-19"
-category: "技术"
+tags: ["RSS", "AI", "开源"]
 ---
 
 

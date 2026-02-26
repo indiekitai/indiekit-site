@@ -1,7 +1,7 @@
 ---
 title: "TypeScript Brand 类型：让类型系统帮你抓 Bug"
 date: "2026-02-19"
-category: "技术"
+tags: ["TypeScript", "类型系统"]
 ---
 
 
