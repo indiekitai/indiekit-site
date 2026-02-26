@@ -127,6 +127,27 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
         .share-buttons {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; }}
         .share-buttons a {{ margin-left: 10px; color: #0066cc; text-decoration: none; }}
         .share-buttons a:hover {{ text-decoration: underline; }}
+        /* Article typography */
+        article p {{ margin: 1.2em 0; line-height: 1.8; }}
+        article h2 {{ margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid #eee; }}
+        article h3 {{ margin-top: 1.6em; margin-bottom: 0.6em; }}
+        article h4 {{ margin-top: 1.4em; margin-bottom: 0.5em; }}
+        article ul, article ol {{ padding-left: 1.5em; margin: 1em 0; }}
+        article li {{ margin-bottom: 0.4em; line-height: 1.7; }}
+        /* Tables */
+        .table-wrapper {{ overflow-x: auto; margin: 1.5em 0; }}
+        article table {{ border-collapse: collapse; width: 100%; font-size: 0.95em; }}
+        article table th, article table td {{ border: 1px solid #ddd; padding: 10px 14px; text-align: left; }}
+        article table th {{ background: #f5f5f5; font-weight: 600; }}
+        article table tr:nth-child(even) {{ background: #fafafa; }}
+        article table tr:hover {{ background: #f0f0f0; }}
+        /* Blockquote */
+        article blockquote {{ border-left: 4px solid #667eea; background: #f8f9fa; margin: 1.5em 0; padding: 1em 1.5em; color: #555; border-radius: 0 4px 4px 0; }}
+        article blockquote p {{ margin: 0.5em 0; }}
+        /* Images */
+        article img {{ max-width: 100%; height: auto; border-radius: 6px; margin: 1em 0; }}
+        /* Horizontal rule */
+        article hr {{ border: none; border-top: 2px solid #eee; margin: 2em 0; }}
         footer {{ text-align: center; color: #666; font-size: 0.9em; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }}
     </style>
 </head>
