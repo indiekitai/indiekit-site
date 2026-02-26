@@ -1,4 +1,9 @@
-# TypeScript Brand 类型：让类型系统帮你抓 Bug
+---
+title: "TypeScript Brand 类型：让类型系统帮你抓 Bug"
+date: "2026-02-19"
+category: "技术"
+---
+
 
 > TypeScript 的结构类型系统很灵活，但有时候太灵活了。Brand 类型是个简单的技巧，能让你区分"看起来一样但意义不同"的类型。
 

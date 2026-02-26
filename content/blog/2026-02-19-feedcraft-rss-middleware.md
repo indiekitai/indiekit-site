@@ -1,4 +1,9 @@
-# FeedCraft：用 AI 增强你的 RSS 订阅
+---
+title: "FeedCraft：用 AI 增强你的 RSS 订阅"
+date: "2026-02-19"
+category: "技术"
+---
+
 
 > RSS 阅读的痛点：全英文看不过来、只有摘要没全文、信息太杂。FeedCraft 用 AI 解决这些问题，而且开源可自部署。
 
