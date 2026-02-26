@@ -12,12 +12,29 @@ from dotenv import load_dotenv
 import frontmatter
 import markdown
 
+import json
+
 load_dotenv()
 
 CONTENT_DIR = Path(__file__).parent.parent / "content"
 SITE_URL = os.getenv("SITE_URL", "https://indiekit.ai")
 SITE_NAME = "IndieKit"
 SITE_DESC = "独立开发者的 AI 工具包 | Resources for Indie Hackers"
+
+# Tools data for API and llms.txt
+TOOLS_DATA = [
+    {"name": "pg-inspect", "npm": "@indiekitai/pg-inspect", "description": "PostgreSQL schema inspection", "mcp": True},
+    {"name": "pg-diff", "npm": "@indiekitai/pg-diff", "description": "PostgreSQL schema diff", "mcp": True},
+    {"name": "pg-top", "npm": "@indiekitai/pg-top", "description": "PostgreSQL activity monitor", "mcp": True},
+    {"name": "pg-toolkit", "npm": "@indiekitai/pg-toolkit", "description": "Unified PostgreSQL CLI", "mcp": True},
+    {"name": "pg-complete", "npm": "@indiekitai/pg-complete", "description": "SQL autocomplete engine", "mcp": True},
+    {"name": "throttled", "npm": "@indiekitai/throttled", "description": "Rate limiting (5 algorithms)", "mcp": True},
+    {"name": "just", "npm": "@indiekitai/just", "description": "Command runner (justfile)", "mcp": True},
+    {"name": "lipgloss", "npm": "@indiekitai/lipgloss", "description": "Terminal styling & layout", "mcp": True},
+    {"name": "inspect", "npm": "@indiekitai/inspect", "description": "Pretty-print any object", "mcp": True},
+    {"name": "env-audit", "npm": "@indiekitai/env-audit", "description": ".env security audit", "mcp": True},
+    {"name": "ai-safe-env", "npm": "@indiekitai/ai-safe-env", "description": "Protect .env from AI tools", "mcp": True},
+]
 
 app = FastAPI(title=SITE_NAME)
 
@@ -302,7 +319,17 @@ async def blog_post(slug: str):
     post_url = f"{SITE_URL}/blog/{slug}"
     share_text = post['title'].replace('"', '&quot;')
     
+    json_ld = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post['title'],
+        "datePublished": str(post['date']),
+        "author": {"@type": "Organization", "name": "IndieKit"},
+        "url": post_url,
+    }, ensure_ascii=False)
+
     content = f'''
+    <script type="application/ld+json">{json_ld}</script>
     <article>
         <h1>{post['title']}</h1>
         <div class="meta">{post['date']} · {read_time} 分钟阅读 · {', '.join(post['tags']) if post['tags'] else '未分类'}</div>
@@ -646,98 +673,57 @@ async def robots():
     return PlainTextResponse(f"""User-agent: *
 Allow: /
 
-Sitemap: {SITE_URL}/sitemap.xml
-
-# AI Agents
 User-agent: GPTBot
 Allow: /
 
-User-agent: ChatGPT-User
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Claude-Web
+User-agent: Google-Extended
 Allow: /
 
-User-agent: Perplexity
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
+Sitemap: {SITE_URL}/sitemap.xml
 """)
 
 
-# llms.txt - AI agent friendly
+# llms.txt - AI agent friendly (llmstxt.org standard)
 @app.get("/llms.txt")
 async def llms_txt():
     from fastapi.responses import PlainTextResponse
-    posts = load_posts()
-    
-    posts_list = "\n".join([f"- {p['title']}: {SITE_URL}/blog/{p['slug']}" for p in posts])
-    
-    return PlainTextResponse(f"""# IndieKit.ai
+    return PlainTextResponse("""# IndieKit
 
-> 独立开发者的 AI 工具包 - Resources for Indie Hackers
+> Open-source developer tools that make developers' lives easier.
 
-IndieKit 是一套为独立开发者打造的轻量级工具集合。
+## Tools
 
-## 工具列表
+- [pg-inspect](https://indiekit.ai/tools#pg-inspect): PostgreSQL schema inspection
+- [pg-diff](https://indiekit.ai/tools#pg-diff): PostgreSQL schema diff
+- [pg-top](https://indiekit.ai/tools#pg-top): PostgreSQL activity monitor
+- [pg-toolkit](https://indiekit.ai/tools#pg-toolkit): Unified PostgreSQL CLI
+- [pg-complete](https://indiekit.ai/tools#pg-complete): SQL autocomplete engine
+- [throttled](https://indiekit.ai/tools#throttled): Rate limiting (5 algorithms)
+- [just](https://indiekit.ai/tools#just): Command runner (justfile)
+- [lipgloss](https://indiekit.ai/tools#lipgloss): Terminal styling & layout
+- [inspect](https://indiekit.ai/tools#inspect): Pretty-print any object
+- [env-audit](https://indiekit.ai/tools#env-audit): .env security audit
+- [ai-safe-env](https://indiekit.ai/tools#ai-safe-env): Protect .env from AI tools
 
-### 1. HN Digest (https://hn.indiekit.ai)
-AI 生成的中文 Hacker News 每日精选。自动抓取热门文章并生成摘要。
+## MCP Server
 
-### 2. Uptime Ping (https://up.indiekit.ai)
-API 健康监控服务。支持 1 分钟检测间隔，Telegram 告警。
-
-### 3. Webhook Relay (https://hook.indiekit.ai)
-接收任意 Webhook 并转发到 Telegram。适合 GitHub、Stripe 等服务通知。
-
-### 4. Tiny Link (https://s.indiekit.ai)
-短链接服务。支持点击统计和自定义短码。
-
-### 5. Quick Paste (https://p.indiekit.ai)
-代码分享工具。支持语法高亮和自动过期。
-
-### 6. AI CS SaaS (https://cs.indiekit.ai)
-多租户 AI 客服系统。基于 RAG 的智能问答，一行代码嵌入网站。
-
-**API 文档**: https://cs.indiekit.ai/docs
-
-**快速开始**:
-```bash
-# 1. 注册租户
-curl -X POST https://cs.indiekit.ai/api/auth/register \\
-  -H "Content-Type: application/json" \\
-  -d '{{"tenant_name":"My Company","tenant_slug":"my-co","admin_email":"admin@example.com","admin_password":"password123","admin_name":"Admin"}}'
-# 返回: {{"tenant_id":1,"api_key":"sk_xxx","access_token":"eyJ..."}}
-
-# 2. 上传知识库
-curl -X POST https://cs.indiekit.ai/api/knowledge \\
-  -H "Authorization: Bearer <access_token>" \\
-  -H "Content-Type: application/json" \\
-  -d '{{"title":"退款政策","content":"30天无条件退款...","category":"售后"}}'
-
-# 3. 测试问答
-curl -X POST https://cs.indiekit.ai/api/chat/send \\
-  -H "X-API-Key: <api_key>" \\
-  -H "Content-Type: application/json" \\
-  -d '{{"message":"怎么退款?","customer_id":"visitor_1"}}'
+One config, all tools:
+```json
+{"mcpServers":{"indiekit":{"command":"npx","args":["@indiekitai/mcp"]}}}
 ```
 
-## 博客文章
+## API
 
-{posts_list}
+All tools available as npm packages under @indiekitai/* scope.
+npm: https://www.npmjs.com/org/indiekitai
+GitHub: https://github.com/indiekitai
 
-## 技术栈
+## Blog
 
-- Python + FastAPI
-- PostgreSQL + pgvector (AI CS SaaS)
-- JSON 文件存储 (其他工具)
-- Gemini API (LLM + Embedding)
-- Cloudflare (DNS/CDN/SSL)
-
-## 联系
-
-网站: {SITE_URL}
+Latest posts at https://indiekit.ai/blog
 """)
 
 
@@ -770,7 +756,51 @@ async def llms_full():
     return PlainTextResponse(content)
 
 
+# --- AI Agent friendly APIs ---
+
+@app.get("/api/tools")
+async def api_tools():
+    return {"tools": TOOLS_DATA}
+
+
+@app.get("/api/blog")
+async def api_blog():
+    posts = load_posts()
+    return {"posts": [
+        {"slug": p["slug"], "title": p["title"], "date": str(p["date"]), "tags": p["tags"], "url": f"{SITE_URL}/blog/{p['slug']}"}
+        for p in posts
+    ]}
+
+
+@app.get("/api/blog/{slug}")
+async def api_blog_post(slug: str):
+    posts = load_posts()
+    post = next((p for p in posts if p["slug"] == slug), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return {
+        "slug": post["slug"],
+        "title": post["title"],
+        "date": str(post["date"]),
+        "tags": post["tags"],
+        "description": post["description"],
+        "content_markdown": post["content"],
+        "url": f"{SITE_URL}/blog/{slug}",
+    }
+
+
+@app.get("/.well-known/ai-plugin.json")
+async def ai_plugin():
+    return {
+        "schema_version": "v1",
+        "name": "IndieKit",
+        "description": "Open-source developer tools with MCP support",
+        "api": {"url": f"{SITE_URL}/api"},
+        "logo_url": f"{SITE_URL}/logo.png",
+        "contact_email": "hello@indiekit.ai",
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8085)
-# This will be patched into the tools section
