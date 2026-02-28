@@ -741,30 +741,30 @@ async def llms_txt():
 ## Tools
 
 ### PostgreSQL Suite
-- [pg-health](https://indiekit.ai/tools#pg-health): PostgreSQL health diagnostics (20+ checks)
-- [pg-inspect](https://indiekit.ai/tools#pg-inspect): PostgreSQL schema inspection
-- [pg-diff](https://indiekit.ai/tools#pg-diff): PostgreSQL schema diff & migration generator
-- [pg-top](https://indiekit.ai/tools#pg-top): PostgreSQL real-time activity monitor
-- [pg-toolkit](https://indiekit.ai/tools#pg-toolkit): Unified PostgreSQL CLI
-- [pgcomplete](https://indiekit.ai/tools#pgcomplete): Context-aware SQL auto-completion
-- [pg2ts](https://indiekit.ai/tools#pg2ts): Generate TypeScript types from schemas
+- [pg-health](https://indiekit.ai/tools#pg-health): PostgreSQL health diagnostics (20+ checks). `npx @indiekitai/pg-health postgres://user:pass@host/db`
+- [pg-inspect](https://indiekit.ai/tools#pg-inspect): PostgreSQL schema inspection — tables, indexes, functions, enums, constraints. `npx @indiekitai/pg-inspect --url postgres://...`
+- [pg-diff](https://indiekit.ai/tools#pg-diff): Compare two PostgreSQL schemas, generate migration SQL. `npx @indiekitai/pg-diff --from db1 --to db2`
+- [pg-top](https://indiekit.ai/tools#pg-top): Real-time PostgreSQL activity — running queries, locks, blocking chains. `npx @indiekitai/pg-top --url postgres://...`
+- [pg-toolkit](https://indiekit.ai/tools#pg-toolkit): Unified CLI for all PG tools above. `npx @indiekitai/pg-toolkit health|inspect|diff|top`
+- [pgcomplete](https://indiekit.ai/tools#pgcomplete): Context-aware SQL auto-completion — knows your tables, columns, functions. `npx @indiekitai/pgcomplete --url postgres://...`
+- [pg2ts](https://indiekit.ai/tools#pg2ts): Generate TypeScript interfaces from PostgreSQL schemas. `python pg2ts.py --url postgres://... -o types.ts`
 
 ### Developer Tools
-- [env-audit](https://indiekit.ai/tools#env-audit): Scan codebases for env vars
-- [throttled](https://indiekit.ai/tools#throttled): Rate limiting (5 algorithms)
-- [just](https://indiekit.ai/tools#just): Task runner (Justfile format)
-- [llm-context](https://indiekit.ai/tools#llm-context): Estimate LLM context usage
-- [git-standup](https://indiekit.ai/tools#git-standup): Generate standup reports from git
-- [clash-init](https://indiekit.ai/tools#clash-init): Clash/mihomo proxy config generator
+- [env-audit](https://indiekit.ai/tools#env-audit): Scan codebases for env var usage across Python/Node/Go/Rust/Shell/Docker, generate .env.example. `python env_audit.py . --json`
+- [throttled](https://indiekit.ai/tools#throttled): Rate limiting library — fixed window, sliding window, token bucket, leaky bucket, GCRA. `npm i @indiekitai/throttled`
+- [just](https://indiekit.ai/tools#just): Task runner using Justfile format (like make but better). `npx @indiekitai/just-ts build`
+- [llm-context](https://indiekit.ai/tools#llm-context): Estimate how many tokens a codebase takes in LLM context. `npx @indiekitai/llm-context . --limit 128000`
+- [git-standup](https://indiekit.ai/tools#git-standup): Generate daily standup reports from git commits. `npx @indiekitai/git-standup --since "2 days ago" --markdown`
+- [clash-init](https://indiekit.ai/tools#clash-init): Generate Clash/mihomo proxy configs for SS/VMess/VLESS/Trojan/Hysteria2. `npx @indiekitai/clash-init --ss --server 1.2.3.4 --port 443`
 
 ### Terminal Rendering
-- [glamour](https://indiekit.ai/tools#glamour): Render Markdown in terminals
-- [lipgloss](https://indiekit.ai/tools#lipgloss): CSS-like terminal styling
-- [rich-inspect](https://indiekit.ai/tools#rich-inspect): Inspect objects with rich output
+- [glamour](https://indiekit.ai/tools#glamour): Render Markdown in terminals with 7 themes (dark, dracula, tokyo-night...). `npx @indiekitai/glamour README.md --style dark`
+- [lipgloss](https://indiekit.ai/tools#lipgloss): CSS-like terminal text styling — colors, borders, padding, alignment. `npm i @indiekitai/lipgloss`
+- [rich-inspect](https://indiekit.ai/tools#rich-inspect): Inspect any JS/TS object with colorful formatted output. `npx @indiekitai/rich-inspect data.json`
 
 ### Automation
-- [trello-autopilot](https://indiekit.ai/tools#trello-autopilot): Auto-fix Trello bugs with AI
-- [pi-skills](https://indiekit.ai/tools#pi-skills): All 16 tools as Pi/Claude Code skills
+- [trello-autopilot](https://indiekit.ai/tools#trello-autopilot): Scan Trello bug cards → invoke Claude Code to fix → move card to Done. Full pipeline: `npx @indiekitai/trello-autopilot --board MyProject --list Bugs --repo ./code`. Supports dry-run, custom agents, MCP Server with scan_bugs/fix_bug/move_card tools.
+- [pi-skills](https://indiekit.ai/tools#pi-skills): All 16 tools as Pi/Claude Code skills. One install: `pi install npm:@indiekitai/pi-skills`
 
 ## MCP Server
 
