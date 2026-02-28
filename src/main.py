@@ -23,17 +23,29 @@ SITE_DESC = "独立开发者的 AI 工具包 | Resources for Indie Hackers"
 
 # Tools data for API and llms.txt
 TOOLS_DATA = [
-    {"name": "pg-inspect", "npm": "@indiekitai/pg-inspect", "description": "PostgreSQL schema inspection", "mcp": True},
-    {"name": "pg-diff", "npm": "@indiekitai/pg-diff", "description": "PostgreSQL schema diff", "mcp": True},
-    {"name": "pg-top", "npm": "@indiekitai/pg-top", "description": "PostgreSQL activity monitor", "mcp": True},
-    {"name": "pg-toolkit", "npm": "@indiekitai/pg-toolkit", "description": "Unified PostgreSQL CLI", "mcp": True},
-    {"name": "pg-complete", "npm": "@indiekitai/pg-complete", "description": "SQL autocomplete engine", "mcp": True},
-    {"name": "throttled", "npm": "@indiekitai/throttled", "description": "Rate limiting (5 algorithms)", "mcp": True},
-    {"name": "just", "npm": "@indiekitai/just", "description": "Command runner (justfile)", "mcp": True},
-    {"name": "lipgloss", "npm": "@indiekitai/lipgloss", "description": "Terminal styling & layout", "mcp": True},
-    {"name": "inspect", "npm": "@indiekitai/inspect", "description": "Pretty-print any object", "mcp": True},
-    {"name": "env-audit", "npm": "@indiekitai/env-audit", "description": ".env security audit", "mcp": True},
-    {"name": "ai-safe-env", "npm": "@indiekitai/ai-safe-env", "description": "Protect .env from AI tools", "mcp": True},
+    # PostgreSQL Suite
+    {"name": "pg-health", "npm": "@indiekitai/pg-health", "github": "indiekitai/pg-health", "description": "PostgreSQL health diagnostics (20+ checks)", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-inspect", "npm": "@indiekitai/pg-inspect", "github": "indiekitai/pg-inspect", "description": "PostgreSQL schema inspection", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-diff", "npm": "@indiekitai/pg-diff", "github": "indiekitai/pg-diff", "description": "PostgreSQL schema diff & migration generator", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-top", "npm": "@indiekitai/pg-top", "github": "indiekitai/pg-top", "description": "PostgreSQL real-time activity monitor", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-toolkit", "npm": "@indiekitai/pg-toolkit", "github": "indiekitai/pg-toolkit", "description": "Unified PostgreSQL CLI (health + inspect + diff + top)", "category": "PostgreSQL", "mcp": True},
+    {"name": "pgcomplete", "npm": "@indiekitai/pgcomplete", "github": "indiekitai/pgcomplete-ts", "description": "Context-aware SQL auto-completion engine", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg2ts", "npm": "@indiekitai/pg2ts", "github": "indiekitai/pg2ts", "description": "Generate TypeScript types from PostgreSQL schemas", "category": "PostgreSQL", "mcp": True},
+    # Developer Tools
+    {"name": "env-audit", "npm": "@indiekitai/env-audit", "github": "indiekitai/env-audit", "description": "Scan codebases for env vars, generate .env.example", "category": "Developer Tools", "mcp": True},
+    {"name": "throttled", "npm": "@indiekitai/throttled", "github": "indiekitai/throttled", "description": "Rate limiting (fixed/sliding window, token bucket, GCRA)", "category": "Developer Tools", "mcp": True},
+    {"name": "just", "npm": "@indiekitai/just-ts", "github": "indiekitai/just-ts", "description": "Task runner (Justfile format)", "category": "Developer Tools", "mcp": True},
+    {"name": "llm-context", "npm": "@indiekitai/llm-context", "github": "indiekitai/llm-context", "description": "Estimate LLM context usage for codebases", "category": "Developer Tools", "mcp": True},
+    {"name": "git-standup", "npm": "@indiekitai/git-standup", "github": "indiekitai/git-standup", "description": "Generate daily standup reports from git history", "category": "Developer Tools", "mcp": True},
+    {"name": "clash-init", "npm": "@indiekitai/clash-init", "github": "indiekitai/clash-init", "description": "Clash/mihomo proxy config generator", "category": "Developer Tools", "mcp": True},
+    # Terminal Rendering
+    {"name": "glamour", "npm": "@indiekitai/glamour", "github": "indiekitai/glamour-ts", "description": "Render Markdown in terminals with themes", "category": "Terminal", "mcp": True},
+    {"name": "lipgloss", "npm": "@indiekitai/lipgloss", "github": "indiekitai/lipgloss-ts", "description": "CSS-like terminal text styling", "category": "Terminal", "mcp": True},
+    {"name": "rich-inspect", "npm": "@indiekitai/rich-inspect", "github": "indiekitai/rich-inspect-ts", "description": "Inspect JS/TS objects with rich terminal output", "category": "Terminal", "mcp": True},
+    # Automation
+    {"name": "trello-autopilot", "npm": "@indiekitai/trello-autopilot", "github": "indiekitai/trello-autopilot", "description": "Auto-fix Trello bug cards with coding agents", "category": "Automation", "mcp": True},
+    # Skills Package
+    {"name": "pi-skills", "npm": "@indiekitai/pi-skills", "github": "indiekitai/pi-skills", "description": "All tools as Pi/Claude Code/Codex skills (16 skills)", "category": "Meta", "mcp": False},
 ]
 
 app = FastAPI(title=SITE_NAME)
@@ -409,12 +421,44 @@ async def tools():
         </div>
     </div>
     
-    <h2>技术栈</h2>
-    <p>每个工具都是独立的 Python + FastAPI 应用。追求极简。</p>
-    <p>总代码量：<strong>~7,000 行</strong>，AI 辅助开发。</p>
+    <h2>📦 npm 工具包</h2>
+    <p>所有工具都有 CLI + MCP Server + JSON 输出。<code>npm install</code> 即用。</p>
+    <p><strong>一键安装所有 skills：</strong> <code>pi install npm:@indiekitai/pi-skills</code></p>
     '''
-    
-    return render_html("工具", content, "免费开源的独立开发者工具集合", f"{SITE_URL}/tools")
+
+    # Dynamically add npm tools grouped by category
+    categories = {}
+    for tool in TOOLS_DATA:
+        cat = tool.get("category", "Other")
+        if cat not in categories:
+            categories[cat] = []
+        categories[cat].append(tool)
+
+    category_icons = {"PostgreSQL": "🐘", "Developer Tools": "🛠", "Terminal": "🎨", "Automation": "🤖", "Meta": "📦"}
+
+    for cat, tools in categories.items():
+        icon = category_icons.get(cat, "📦")
+        content += f'<h3>{icon} {cat}</h3><div class="tools">'
+        for t in tools:
+            gh_link = f'<a href="https://github.com/{t["github"]}" target="_blank">GitHub</a>' if t.get("github") else ""
+            npm_link = f'<code>npx {t["npm"]}</code>' if t.get("npm") else ""
+            mcp_badge = ' · 🔌 MCP' if t.get("mcp") else ""
+            content += f'''
+        <div class="tool" id="{t['name']}">
+            <h4>{t['name']}</h4>
+            <p>{t['description']}</p>
+            <p class="tool-stats">{npm_link}{mcp_badge}</p>
+            <p>{gh_link}</p>
+        </div>'''
+        content += '</div>'
+
+    content += f'''
+    <h2>技术栈</h2>
+    <p>Web 工具：Python + FastAPI。npm 工具包：TypeScript。全部开源。</p>
+    <p>GitHub: <a href="https://github.com/indiekitai">github.com/indiekitai</a> · npm: <a href="https://www.npmjs.com/org/indiekitai">@indiekitai</a></p>
+    '''
+
+    return render_html("工具", content, "免费开源的独立开发者工具集合 — 18 个 npm 包 + Web 工具", f"{SITE_URL}/tools")
 
 
 @app.get("/mcp", response_class=HTMLResponse)
@@ -696,17 +740,31 @@ async def llms_txt():
 
 ## Tools
 
+### PostgreSQL Suite
+- [pg-health](https://indiekit.ai/tools#pg-health): PostgreSQL health diagnostics (20+ checks)
 - [pg-inspect](https://indiekit.ai/tools#pg-inspect): PostgreSQL schema inspection
-- [pg-diff](https://indiekit.ai/tools#pg-diff): PostgreSQL schema diff
-- [pg-top](https://indiekit.ai/tools#pg-top): PostgreSQL activity monitor
+- [pg-diff](https://indiekit.ai/tools#pg-diff): PostgreSQL schema diff & migration generator
+- [pg-top](https://indiekit.ai/tools#pg-top): PostgreSQL real-time activity monitor
 - [pg-toolkit](https://indiekit.ai/tools#pg-toolkit): Unified PostgreSQL CLI
-- [pg-complete](https://indiekit.ai/tools#pg-complete): SQL autocomplete engine
+- [pgcomplete](https://indiekit.ai/tools#pgcomplete): Context-aware SQL auto-completion
+- [pg2ts](https://indiekit.ai/tools#pg2ts): Generate TypeScript types from schemas
+
+### Developer Tools
+- [env-audit](https://indiekit.ai/tools#env-audit): Scan codebases for env vars
 - [throttled](https://indiekit.ai/tools#throttled): Rate limiting (5 algorithms)
-- [just](https://indiekit.ai/tools#just): Command runner (justfile)
-- [lipgloss](https://indiekit.ai/tools#lipgloss): Terminal styling & layout
-- [inspect](https://indiekit.ai/tools#inspect): Pretty-print any object
-- [env-audit](https://indiekit.ai/tools#env-audit): .env security audit
-- [ai-safe-env](https://indiekit.ai/tools#ai-safe-env): Protect .env from AI tools
+- [just](https://indiekit.ai/tools#just): Task runner (Justfile format)
+- [llm-context](https://indiekit.ai/tools#llm-context): Estimate LLM context usage
+- [git-standup](https://indiekit.ai/tools#git-standup): Generate standup reports from git
+- [clash-init](https://indiekit.ai/tools#clash-init): Clash/mihomo proxy config generator
+
+### Terminal Rendering
+- [glamour](https://indiekit.ai/tools#glamour): Render Markdown in terminals
+- [lipgloss](https://indiekit.ai/tools#lipgloss): CSS-like terminal styling
+- [rich-inspect](https://indiekit.ai/tools#rich-inspect): Inspect objects with rich output
+
+### Automation
+- [trello-autopilot](https://indiekit.ai/tools#trello-autopilot): Auto-fix Trello bugs with AI
+- [pi-skills](https://indiekit.ai/tools#pi-skills): All 16 tools as Pi/Claude Code skills
 
 ## MCP Server
 
