@@ -7,7 +7,7 @@
 
 独立开发者的 AI 工具包。
 
-**Live**: https://indiekit.ai
+**在线访问**: https://indiekit.ai
 
 ## 🔧 工具
 
