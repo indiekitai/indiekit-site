@@ -9,27 +9,25 @@
 
 **Live**: https://indiekit.ai
 
-## 🔧 工具
+## 📦 主要工具（npm）
+
+| 工具 | 描述 | npm |
+|------|------|-----|
+| **pg-dash** | PostgreSQL 监控 + 健康检查 + EXPLAIN + 锁监控 + MCP（23 tools） | `@indiekitai/pg-dash` |
+| **pg-safe-migrate** | PostgreSQL migration 安全检查（strong_migrations JS 版） | `@indiekitai/pg-safe-migrate` |
+
+```bash
+npx @indiekitai/pg-dash check postgres://localhost/mydb
+npx @indiekitai/pg-safe-migrate check ./migrations/
+```
+
+## 🌐 Web 服务
 
 | 工具 | 描述 | URL |
 |------|------|-----|
 | HN Digest | AI 中文 HN 每日精选 | [hn.indiekit.ai](https://hn.indiekit.ai) |
 | Uptime Ping | API 健康监控 + Telegram 告警 | [up.indiekit.ai](https://up.indiekit.ai) |
-| Webhook Relay | Webhook 转发到 Telegram | [hook.indiekit.ai](https://hook.indiekit.ai) |
 | Tiny Link | 短链接 + 点击统计 | [s.indiekit.ai](https://s.indiekit.ai) |
-| Quick Paste | 代码分享 + 语法高亮 | [p.indiekit.ai](https://p.indiekit.ai) |
-| AI CS SaaS | 多租户 AI 客服 + RAG | [cs.indiekit.ai](https://cs.indiekit.ai) |
-| Doc2MD | PDF/Word/网页 → Markdown | [d.indiekit.ai](https://d.indiekit.ai) |
-
-## 📦 MCP Servers
-
-让 AI Agent 直接使用这些工具：
-
-```bash
-pip install indiekit-mcp
-pip install indiekit-notion-mcp
-pip install indiekit-doc2md
-```
 
 ## 🚀 本地运行
 

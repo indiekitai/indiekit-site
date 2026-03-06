@@ -23,29 +23,14 @@ SITE_DESC = "独立开发者的 AI 工具包 | Resources for Indie Hackers"
 
 # Tools data for API and llms.txt
 TOOLS_DATA = [
-    # PostgreSQL Suite
-    {"name": "pg-health", "npm": "@indiekitai/pg-health", "github": "indiekitai/pg-health", "description": "PostgreSQL health diagnostics (20+ checks)", "category": "PostgreSQL", "mcp": True},
-    {"name": "pg-inspect", "npm": "@indiekitai/pg-inspect", "github": "indiekitai/pg-inspect", "description": "PostgreSQL schema inspection", "category": "PostgreSQL", "mcp": True},
-    {"name": "pg-diff", "npm": "@indiekitai/pg-diff", "github": "indiekitai/pg-diff", "description": "PostgreSQL schema diff & migration generator", "category": "PostgreSQL", "mcp": True},
-    {"name": "pg-top", "npm": "@indiekitai/pg-top", "github": "indiekitai/pg-top", "description": "PostgreSQL real-time activity monitor", "category": "PostgreSQL", "mcp": True},
-    {"name": "pg-toolkit", "npm": "@indiekitai/pg-toolkit", "github": "indiekitai/pg-toolkit", "description": "Unified PostgreSQL CLI (health + inspect + diff + top)", "category": "PostgreSQL", "mcp": True},
-    {"name": "pgcomplete", "npm": "@indiekitai/pgcomplete", "github": "indiekitai/pgcomplete-ts", "description": "Context-aware SQL auto-completion engine", "category": "PostgreSQL", "mcp": True},
-    {"name": "pg2ts", "npm": "@indiekitai/pg2ts", "github": "indiekitai/pg2ts", "description": "Generate TypeScript types from PostgreSQL schemas", "category": "PostgreSQL", "mcp": True},
-    # Developer Tools
+    # PostgreSQL Suite — active
+    {"name": "pg-dash", "npm": "@indiekitai/pg-dash", "github": "indiekitai/pg-dash", "description": "PostgreSQL monitoring, health checks, EXPLAIN analyzer, lock monitor, migration safety — 23 MCP tools", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-safe-migrate", "npm": "@indiekitai/pg-safe-migrate", "github": "indiekitai/pg-safe-migrate", "description": "Catch unsafe PostgreSQL migrations before production. JS/TS equivalent of strong_migrations (Ruby). CI-friendly, no DB required.", "category": "PostgreSQL", "mcp": True},
+    # Developer Tools — active
     {"name": "env-audit", "npm": "@indiekitai/env-audit", "github": "indiekitai/env-audit", "description": "Scan codebases for env vars, generate .env.example", "category": "Developer Tools", "mcp": True},
-    {"name": "throttled", "npm": "@indiekitai/throttled", "github": "indiekitai/throttled", "description": "Rate limiting (fixed/sliding window, token bucket, GCRA)", "category": "Developer Tools", "mcp": True},
-    {"name": "just", "npm": "@indiekitai/just-ts", "github": "indiekitai/just-ts", "description": "Task runner (Justfile format)", "category": "Developer Tools", "mcp": True},
     {"name": "llm-context", "npm": "@indiekitai/llm-context", "github": "indiekitai/llm-context", "description": "Estimate LLM context usage for codebases", "category": "Developer Tools", "mcp": True},
     {"name": "git-standup", "npm": "@indiekitai/git-standup", "github": "indiekitai/git-standup", "description": "Generate daily standup reports from git history", "category": "Developer Tools", "mcp": True},
     {"name": "clash-init", "npm": "@indiekitai/clash-init", "github": "indiekitai/clash-init", "description": "Clash/mihomo proxy config generator", "category": "Developer Tools", "mcp": True},
-    # Terminal Rendering
-    {"name": "glamour", "npm": "@indiekitai/glamour", "github": "indiekitai/glamour-ts", "description": "Render Markdown in terminals with themes", "category": "Terminal", "mcp": True},
-    {"name": "lipgloss", "npm": "@indiekitai/lipgloss", "github": "indiekitai/lipgloss-ts", "description": "CSS-like terminal text styling", "category": "Terminal", "mcp": True},
-    {"name": "rich-inspect", "npm": "@indiekitai/rich-inspect", "github": "indiekitai/rich-inspect-ts", "description": "Inspect JS/TS objects with rich terminal output", "category": "Terminal", "mcp": True},
-    # Automation
-    {"name": "trello-autopilot", "npm": "@indiekitai/trello-autopilot", "github": "indiekitai/trello-autopilot", "description": "Auto-fix Trello bug cards with coding agents", "category": "Automation", "mcp": True},
-    # Skills Package
-    {"name": "pi-skills", "npm": "@indiekitai/pi-skills", "github": "indiekitai/pi-skills", "description": "All tools as Pi/Claude Code/Codex skills (16 skills)", "category": "Meta", "mcp": False},
 ]
 
 app = FastAPI(title=SITE_NAME)
