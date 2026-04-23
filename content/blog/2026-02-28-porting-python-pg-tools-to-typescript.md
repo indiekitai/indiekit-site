@@ -132,4 +132,9 @@ This is v0.2. Rough edges exist. Feedback welcome — open an issue or find me o
 
 ---
 
-**Update — 2026-04-23**: Two months after writing this, I archived most of these TypeScript packages. The focused survivor is [pg-health](https://github.com/indiekitai/pg-health) — a single Python CLI, not a 7-package suite. The CI-side tool (pg-dash) is still going and has merged most of the functionality I initially split across pg-inspect / pg-top / pg-explain / pg-diff / pg-safe-migrate. Retrospective on why the split failed: [pg-health: 从 7 个包回到 1 个工具](/blog/2026-04-23-pg-health-intro).
+**Update — 2026-04-23 (evening)**: Two months after writing this, the 7-package TypeScript suite is gone and the final shape has settled. Two survivors, split by **whether there's a Web UI**:
+
+- **[pg-dash](https://github.com/indiekitai/pg-dash)** — self-hostable PostgreSQL monitoring dashboard (TypeScript). Browser panel, team on-call, continuous monitoring.
+- **[pg-health](https://github.com/indiekitai/pg-health) v2.0** — CLI + MCP toolkit (Python). The heir to the archived 7-package CLI family. `check-migration`, `explain`, `check`, `suggest`, `fix`, MCP server — all in one `pipx install pg-health`.
+
+Most of what I initially split across pg-inspect / pg-top / pg-explain / pg-diff / pg-safe-migrate now lives inside one of those two, or was dropped outright because I never actually used it. The retrospective: [pg-health: 从 7 个包回到 1 个工具](/blog/2026-04-23-pg-health-intro).

@@ -343,9 +343,9 @@ async def home():
 
     <!-- pg-dash vs pg-health: 分工说明 -->
     <aside style="background: #fff; border-left: 4px solid #667eea; padding: 14px 20px; margin: 0 0 28px; border-radius: 0 6px 6px 0; color: #555; font-size: 0.92rem; line-height: 1.7;">
-        <strong style="color:#333;">两个 PG 工具，两条战线：</strong>
-        <span style="color:#0f3460; font-weight:700;">pg-dash</span>（TypeScript）跑在 CI / pre-deploy，在问题进生产前拦截；
-        <span style="color:#0f4c52; font-weight:700;">pg-health</span>（Python）坐在 psql 旁边，人在环里交互式诊断和修复。两个都带 MCP Server。
+        <strong style="color:#333;">两种形态，两个工具：</strong>
+        <span style="color:#0f3460; font-weight:700;">pg-dash</span>（Web Dashboard）—— 浏览器面板、团队 on-call、持续监控；
+        <span style="color:#0f4c52; font-weight:700;">pg-health</span>（CLI + MCP）—— 终端工具、Agent-native、单人可用、MCP 优先。
     </aside>
 
     <h2>🔧 工具</h2>
