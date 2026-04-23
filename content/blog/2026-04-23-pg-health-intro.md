@@ -22,6 +22,15 @@ pg-toolkit 的问题不在代码，在**产品定位**。我当时想的是"Type
 
 砍到一个工具，只做一件事：**体检 + 开药方 + 你确认后吃药**。
 
+## 先说清楚：pg-health ≠ 取代 pg-dash
+
+[pg-dash](https://github.com/indiekitai/pg-dash) 没在这次清理里。它活得好好的，因为和 pg-health 的定位**完全不同**：
+
+- **pg-dash**（TypeScript）跑在 CI / pre-deploy，在问题进生产前拦截。`npx @indiekitai/pg-dash check-migration` 是典型场景——PR 里加了个迁移，pipeline 里跑一下，不安全就红。
+- **pg-health**（Python）坐在 psql 旁边，人在环里诊断 + 修复。凌晨三点 P1 告警，你 SSH 上去 `pg-health check`，看到 bloat，`pg-health fix` 带 dry-run 让你看 SQL，apply。
+
+我自己 Cutie 项目这两个月一直在用 pg-dash 做 CI 守门员，这篇文章不是取代它，是介绍它的**补位**。两个工具都带 MCP Server，所以你的 AI agent 可以同时看到 CI 状态和实时健康——一个产品线，两条战线。
+
 ## pg-health 是什么
 
 一条命令扫完你的 PG，列出所有问题，每个问题给具体的修复 SQL：
