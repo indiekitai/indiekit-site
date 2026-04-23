@@ -129,3 +129,7 @@ Takes about 3 seconds. Tells you what's wrong and how to fix it.
 **npm:** `npm install @indiekitai/pg-toolkit`
 
 This is v0.2. Rough edges exist. Feedback welcome — open an issue or find me on [HN](https://news.ycombinator.com/user?id=indiekitai).
+
+---
+
+**Update — 2026-04-23**: Two months after writing this, I archived most of these TypeScript packages. The focused survivor is [pg-health](https://github.com/indiekitai/pg-health) — a single Python CLI, not a 7-package suite. The CI-side tool (pg-dash) is still going and has merged most of the functionality I initially split across pg-inspect / pg-top / pg-explain / pg-diff / pg-safe-migrate. Retrospective on why the split failed: [pg-health: 从 7 个包回到 1 个工具](/blog/2026-04-23-pg-health-intro).
