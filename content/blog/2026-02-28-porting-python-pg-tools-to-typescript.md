@@ -132,9 +132,4 @@ This is v0.2. Rough edges exist. Feedback welcome — open an issue or find me o
 
 ---
 
-**Update — 2026-04-23 (evening)**: Two months after writing this, the 7-package TypeScript suite is gone and the final shape has settled. Two survivors, split by **whether there's a Web UI**:
-
-- **[pg-dash](https://github.com/indiekitai/pg-dash)** — self-hostable PostgreSQL monitoring dashboard (TypeScript). Browser panel, team on-call, continuous monitoring.
-- **[pg-health](https://github.com/indiekitai/pg-health) v2.0** — CLI + MCP toolkit (Python). The heir to the archived 7-package CLI family. `check-migration`, `explain`, `check`, `suggest`, `fix`, MCP server — all in one `pipx install pg-health`.
-
-Most of what I initially split across pg-inspect / pg-top / pg-explain / pg-diff / pg-safe-migrate now lives inside one of those two, or was dropped outright because I never actually used it. The retrospective: [pg-health: 从 7 个包回到 1 个工具](/blog/2026-04-23-pg-health-intro).
+**Update — 2026-04-23 (late evening)**: Two months after this TypeScript suite post, only one tool survives — and its shape changed through the day. Morning: archived the 7-package suite, kept a focused [pg-health](https://github.com/indiekitai/pg-health) Python CLI. Afternoon: tried to split Web Dashboard (pg-dash) vs CLI+MCP (pg-health) — that split died within hours when I realized I only had one user (myself). Evening: consolidated everything back into [pg-dash](https://github.com/indiekitai/pg-dash) v0.11.0 as a single tool: Web Dashboard + CLI + MCP in one npm install. pg-health PyPI yanked, GitHub archived. Full retrospective of the one-day fork-and-merge: [pg-health 的一天生命周期](/blog/2026-04-23-pg-health-intro).

@@ -212,7 +212,7 @@ async def home():
     <article>
         <h1>独立开发者的 AI 工具包</h1>
         <p>IndieKit 是一套为独立开发者打造的轻量级工具集合。所有工具都是开源的，你可以免费使用或自行部署。</p>
-        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 9 个工具和这个博客。</p>
+        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 8 个工具和这个博客。</p>
     </article>
 
     <!-- pg-dash Landing Section -->
@@ -278,76 +278,6 @@ async def home():
         </div>
     </section>
 
-    <!-- pg-health Landing Section -->
-    <section style="background: linear-gradient(135deg, #0a1f1c 0%, #103c38 50%, #0f4c52 100%); color: #e0e0e0; border-radius: 12px; padding: 36px 32px; margin: 28px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.18);">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
-            <span style="font-size:2rem;">🩺</span>
-            <h2 style="margin:0; color:#fff; font-size:1.7rem; letter-spacing:-0.5px;">pg-health</h2>
-            <span style="background:#34d399; color:#064e3b; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">v1.0 · MIT</span>
-        </div>
-        <p style="margin:0 0 6px; color:#94a3b8; font-size:0.95rem;">pipx install pg-health · Python 交互式诊断</p>
-        <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:560px;">
-            PostgreSQL 医生 —— 不止发现问题，还给修复 SQL 和一键执行。配套 MCP Server，让 Claude / Cursor 直接诊断你的 DB。
-        </p>
-
-        <div style="background:#0d1117; border-radius:8px; padding:16px 20px; font-family:monospace; font-size:0.88rem; color:#c9d1d9; margin-bottom:24px; overflow-x:auto;">
-            <div style="color:#6e7681; margin-bottom:8px;"># 安装</div>
-            <div><span style="color:#79c0ff;">pipx</span> <span style="color:#c9d1d9;">install pg-health</span></div>
-            <div style="margin-top:12px; color:#6e7681;"># 体检 + 修复建议</div>
-            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">check</span> <span style="color:#a5d6ff;">"$DATABASE_URL"</span></div>
-            <div style="margin-top:12px; color:#6e7681;"># 一键修（先 dry-run 预览 SQL）</div>
-            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">fix unused-indexes --dry-run</span></div>
-            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">fix unused-indexes</span></div>
-            <div style="margin-top:12px; color:#6e7681;"># MCP Server（给 Claude / Cursor）</div>
-            <div><span style="color:#79c0ff;">pg-health-mcp</span></div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
-            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
-                <div style="font-size:1.3rem; margin-bottom:4px;">🤖</div>
-                <div style="font-weight:600; color:#fff; margin-bottom:3px;">LLM Advisor</div>
-                <div style="font-size:0.85rem; color:#94a3b8;">不止"bloat 超阈值"，直接给修复 SQL</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
-                <div style="font-size:1.3rem; margin-bottom:4px;">⚡</div>
-                <div style="font-weight:600; color:#fff; margin-bottom:3px;">Quick Fix</div>
-                <div style="font-size:0.85rem; color:#94a3b8;">Dry-run 预览 → apply 执行，全部留案底</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
-                <div style="font-size:1.3rem; margin-bottom:4px;">🔌</div>
-                <div style="font-weight:600; color:#fff; margin-bottom:3px;">MCP Server</div>
-                <div style="font-size:0.85rem; color:#94a3b8;">让 Agent 直接看你的 DB 健康状态</div>
-            </div>
-            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
-                <div style="font-size:1.3rem; margin-bottom:4px;">🔒</div>
-                <div style="font-weight:600; color:#fff; margin-bottom:3px;">Self-hosted</div>
-                <div style="font-size:0.85rem; color:#94a3b8;">连接字符串不离开你的机器</div>
-            </div>
-        </div>
-
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <a href="https://github.com/indiekitai/pg-health" target="_blank"
-               style="display:inline-flex; align-items:center; gap:6px; background:#21262d; color:#c9d1d9; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500; border:1px solid #30363d;">
-                ⭐ GitHub
-            </a>
-            <a href="https://pg.indiekit.ai" target="_blank"
-               style="display:inline-flex; align-items:center; gap:6px; background:#34d399; color:#064e3b; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:600;">
-                🐘 在线 demo
-            </a>
-            <a href="/blog/2026-04-23-pg-health-intro"
-               style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); color:#cbd5e1; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500;">
-                📖 博客文章
-            </a>
-        </div>
-    </section>
-
-    <!-- pg-dash vs pg-health: 分工说明 -->
-    <aside style="background: #fff; border-left: 4px solid #667eea; padding: 14px 20px; margin: 0 0 28px; border-radius: 0 6px 6px 0; color: #555; font-size: 0.92rem; line-height: 1.7;">
-        <strong style="color:#333;">两种形态，两个工具：</strong>
-        <span style="color:#0f3460; font-weight:700;">pg-dash</span>（Web Dashboard）—— 浏览器面板、团队 on-call、持续监控；
-        <span style="color:#0f4c52; font-weight:700;">pg-health</span>（CLI + MCP）—— 终端工具、Agent-native、单人可用、MCP 优先。
-    </aside>
-
     <h2>🔧 工具</h2>
     <div class="tools">
         <div class="tool">
@@ -390,12 +320,6 @@ async def home():
             <p>PDF/Word/网页 → Markdown</p>
             <p class="tool-stats">✨ URL 前缀模式：d.indiekit.ai/https/任意网址</p>
             <a href="https://d.indiekit.ai/docs">→ API 文档</a>
-        </div>
-        <div class="tool">
-            <h3>🐘 PG Health <span style="background:#34d399; color:#064e3b; font-size:0.65rem; padding:1px 6px; border-radius:4px; margin-left:4px; font-weight:600; vertical-align:middle;">MCP</span></h3>
-            <p>Python 版 PG 医生 · LLM Advisor + Quick Fix + MCP Server</p>
-            <p class="tool-stats">pipx install pg-health · <a href="/blog/2026-04-23-pg-health-intro">新博客 →</a></p>
-            <a href="https://pg.indiekit.ai">→ 访问</a>
         </div>
     </div>
     
@@ -531,12 +455,6 @@ async def tools():
             <p>文档转 Markdown 服务。支持 PDF、Word、HTML、网页。URL 前缀模式：<code>d.indiekit.ai/https/任意网址</code>。三层转换管道 + markdown.new fallback。</p>
             <p class="tool-stats">✨ URL 前缀 · 📑 多格式 · 🔄 自动 Fallback · ⚡ REST + MCP</p>
             <p><a href="https://d.indiekit.ai/docs" class="tool-link">→ API 文档</a></p>
-        </div>
-        <div class="tool">
-            <h3>🐘 PG Health</h3>
-            <p>PostgreSQL 数据库健康检查。检测缓存命中率、未使用索引、慢查询、连接数等问题，给出优化建议。</p>
-            <p class="tool-stats">🔍 9 项检查 · 📊 JSON API · 🔒 连接串不存储</p>
-            <p><a href="https://pg.indiekit.ai" class="tool-link">→ 访问工具</a></p>
         </div>
     </div>
     
@@ -860,7 +778,6 @@ async def llms_txt():
 ## Tools
 
 ### PostgreSQL Suite
-- [pg-health](https://indiekit.ai/tools#pg-health): PostgreSQL health diagnostics (20+ checks). `npx @indiekitai/pg-health postgres://user:pass@host/db`
 - [pg-inspect](https://indiekit.ai/tools#pg-inspect): PostgreSQL schema inspection — tables, indexes, functions, enums, constraints. `npx @indiekitai/pg-inspect --url postgres://...`
 - [pg-diff](https://indiekit.ai/tools#pg-diff): Compare two PostgreSQL schemas, generate migration SQL. `npx @indiekitai/pg-diff --from db1 --to db2`
 - [pg-top](https://indiekit.ai/tools#pg-top): Real-time PostgreSQL activity — running queries, locks, blocking chains. `npx @indiekitai/pg-top --url postgres://...`
