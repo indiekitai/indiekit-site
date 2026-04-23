@@ -3,3 +3,9 @@ __pycache__/
 *.pyc
 .env
 !.env.example
+
+# patch backups (local safety nets)
+*.bak-*
+*.py.bak-*
+*.md.bak-*
+*.html.bak-*
