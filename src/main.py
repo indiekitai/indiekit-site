@@ -212,9 +212,142 @@ async def home():
     <article>
         <h1>独立开发者的 AI 工具包</h1>
         <p>IndieKit 是一套为独立开发者打造的轻量级工具集合。所有工具都是开源的，你可以免费使用或自行部署。</p>
-        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 8 个工具和这个博客。</p>
+        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 9 个工具和这个博客。</p>
     </article>
-    
+
+    <!-- pg-dash Landing Section -->
+    <section style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #e0e0e0; border-radius: 12px; padding: 36px 32px; margin: 28px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.18);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+            <span style="font-size:2rem;">🐘</span>
+            <h2 style="margin:0; color:#fff; font-size:1.7rem; letter-spacing:-0.5px;">pg-dash</h2>
+            <span style="background:#4ade80; color:#14532d; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">v0.5+</span>
+        </div>
+        <p style="margin:0 0 6px; color:#94a3b8; font-size:0.95rem;">@indiekitai/pg-dash</p>
+        <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:560px;">
+            PostgreSQL 全能监控工具。健康检查、EXPLAIN 分析、锁监控、迁移安全审查 —— 一条命令搞定。
+        </p>
+
+        <div style="background:#0d1117; border-radius:8px; padding:16px 20px; font-family:monospace; font-size:0.88rem; color:#c9d1d9; margin-bottom:24px; overflow-x:auto;">
+            <div style="color:#6e7681; margin-bottom:8px;"># 安装</div>
+            <div><span style="color:#79c0ff;">npm</span> <span style="color:#c9d1d9;">install -g @indiekitai/pg-dash</span></div>
+            <div style="margin-top:12px; color:#6e7681;"># 核心命令</div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">check</span>              <span style="color:#6e7681;"># 全面健康检查</span></div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">explain</span> <span style="color:#a5d6ff;">"SELECT ..."</span>  <span style="color:#6e7681;"># EXPLAIN 可视化</span></div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">watch-locks</span>        <span style="color:#6e7681;"># 实时锁监控</span></div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">check-migration</span>    <span style="color:#6e7681;"># 迁移安全检查</span></div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">schema-diff</span>        <span style="color:#6e7681;"># Schema 对比</span></div>
+            <div><span style="color:#79c0ff;">pg-dash</span> <span style="color:#ffa657;">diff-env</span>           <span style="color:#6e7681;"># 两环境 Schema 差异</span></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">📊</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">健康检查</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">缓存命中率、慢查询、连接数、未使用索引</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🔍</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">EXPLAIN 分析</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">终端可视化执行计划，Seq Scan 一眼识别</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🔒</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">锁监控</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">实时追踪锁等待链，定位阻塞源</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🔌</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">23 个 MCP 工具</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">让 AI Agent 直接操作你的 PG 数据库</div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="https://github.com/indiekitai/pg-dash" target="_blank"
+               style="display:inline-flex; align-items:center; gap:6px; background:#21262d; color:#c9d1d9; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500; border:1px solid #30363d;">
+                ⭐ GitHub
+            </a>
+            <a href="https://www.npmjs.com/package/@indiekitai/pg-dash" target="_blank"
+               style="display:inline-flex; align-items:center; gap:6px; background:#cc3534; color:#fff; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500;">
+                📦 npm
+            </a>
+            <a href="/tools#pg-dash"
+               style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); color:#cbd5e1; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500;">
+                → 完整文档
+            </a>
+        </div>
+    </section>
+
+    <!-- pg-health Landing Section -->
+    <section style="background: linear-gradient(135deg, #0a1f1c 0%, #103c38 50%, #0f4c52 100%); color: #e0e0e0; border-radius: 12px; padding: 36px 32px; margin: 28px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.18);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+            <span style="font-size:2rem;">🩺</span>
+            <h2 style="margin:0; color:#fff; font-size:1.7rem; letter-spacing:-0.5px;">pg-health</h2>
+            <span style="background:#34d399; color:#064e3b; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">v1.0 · MIT</span>
+        </div>
+        <p style="margin:0 0 6px; color:#94a3b8; font-size:0.95rem;">pipx install pg-health · Python 交互式诊断</p>
+        <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:560px;">
+            PostgreSQL 医生 —— 不止发现问题，还给修复 SQL 和一键执行。配套 MCP Server，让 Claude / Cursor 直接诊断你的 DB。
+        </p>
+
+        <div style="background:#0d1117; border-radius:8px; padding:16px 20px; font-family:monospace; font-size:0.88rem; color:#c9d1d9; margin-bottom:24px; overflow-x:auto;">
+            <div style="color:#6e7681; margin-bottom:8px;"># 安装</div>
+            <div><span style="color:#79c0ff;">pipx</span> <span style="color:#c9d1d9;">install pg-health</span></div>
+            <div style="margin-top:12px; color:#6e7681;"># 体检 + 修复建议</div>
+            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">check</span> <span style="color:#a5d6ff;">"$DATABASE_URL"</span></div>
+            <div style="margin-top:12px; color:#6e7681;"># 一键修（先 dry-run 预览 SQL）</div>
+            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">fix unused-indexes --dry-run</span></div>
+            <div><span style="color:#79c0ff;">pg-health</span> <span style="color:#ffa657;">fix unused-indexes</span></div>
+            <div style="margin-top:12px; color:#6e7681;"># MCP Server（给 Claude / Cursor）</div>
+            <div><span style="color:#79c0ff;">pg-health-mcp</span></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:24px;">
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🤖</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">LLM Advisor</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">不止"bloat 超阈值"，直接给修复 SQL</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">⚡</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">Quick Fix</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">Dry-run 预览 → apply 执行，全部留案底</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🔌</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">MCP Server</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">让 Agent 直接看你的 DB 健康状态</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:14px 16px;">
+                <div style="font-size:1.3rem; margin-bottom:4px;">🔒</div>
+                <div style="font-weight:600; color:#fff; margin-bottom:3px;">Self-hosted</div>
+                <div style="font-size:0.85rem; color:#94a3b8;">连接字符串不离开你的机器</div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="https://github.com/indiekitai/pg-health" target="_blank"
+               style="display:inline-flex; align-items:center; gap:6px; background:#21262d; color:#c9d1d9; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500; border:1px solid #30363d;">
+                ⭐ GitHub
+            </a>
+            <a href="https://pg.indiekit.ai" target="_blank"
+               style="display:inline-flex; align-items:center; gap:6px; background:#34d399; color:#064e3b; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:600;">
+                🐘 在线 demo
+            </a>
+            <a href="/blog/2026-04-23-pg-health-intro"
+               style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); color:#cbd5e1; text-decoration:none; padding:9px 18px; border-radius:6px; font-size:0.9rem; font-weight:500;">
+                📖 博客文章
+            </a>
+        </div>
+    </section>
+
+    <!-- pg-dash vs pg-health: 分工说明 -->
+    <aside style="background: #fff; border-left: 4px solid #667eea; padding: 14px 20px; margin: 0 0 28px; border-radius: 0 6px 6px 0; color: #555; font-size: 0.92rem; line-height: 1.7;">
+        <strong style="color:#333;">两个 PG 工具，两条战线：</strong>
+        <span style="color:#0f3460; font-weight:700;">pg-dash</span>（TypeScript）跑在 CI / pre-deploy，在问题进生产前拦截；
+        <span style="color:#0f4c52; font-weight:700;">pg-health</span>（Python）坐在 psql 旁边，人在环里交互式诊断和修复。两个都带 MCP Server。
+    </aside>
+
     <h2>🔧 工具</h2>
     <div class="tools">
         <div class="tool">
@@ -259,8 +392,9 @@ async def home():
             <a href="https://d.indiekit.ai/docs">→ API 文档</a>
         </div>
         <div class="tool">
-            <h3>🐘 PG Health</h3>
-            <p>PostgreSQL 健康检查 + 优化建议</p>
+            <h3>🐘 PG Health <span style="background:#34d399; color:#064e3b; font-size:0.65rem; padding:1px 6px; border-radius:4px; margin-left:4px; font-weight:600; vertical-align:middle;">MCP</span></h3>
+            <p>Python 版 PG 医生 · LLM Advisor + Quick Fix + MCP Server</p>
+            <p class="tool-stats">pipx install pg-health · <a href="/blog/2026-04-23-pg-health-intro">新博客 →</a></p>
             <a href="https://pg.indiekit.ai">→ 访问</a>
         </div>
     </div>
