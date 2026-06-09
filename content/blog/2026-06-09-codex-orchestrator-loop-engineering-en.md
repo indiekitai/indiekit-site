@@ -1,8 +1,8 @@
 ---
-title: "From Prompting Agents to Engineering Loops: Why I Built codex-orchestrator"
+title: "Loop Engineering for Codex and Claude Code: Why I Built codex-orchestrator"
 date: 2026-06-09
-description: "How a real large-scale rewrite pushed me from using Codex as a single coding assistant to designing a supervised multi-session engineering loop."
-tags: ["AI Coding", "Codex", "Loop Engineering", "Agents", "Open Source"]
+description: "A practical Loop Engineering workflow for Codex, Claude Code, AI coding agents, worktree isolation, heartbeat monitoring, and supervised multi-session review/merge loops."
+tags: ["AI Coding", "Codex", "Claude Code", "Loop Engineering", "AI Agent Orchestration", "Open Source"]
 lang: en
 featured: true
 ---
@@ -16,6 +16,15 @@ The real shift is designing the loop around the agent: how work is split, isolat
 That is the idea behind [codex-orchestrator](https://github.com/indiekitai/codex-orchestrator), a Codex skill I recently open-sourced.
 
 It came from a simple problem: in a real multi-module rewrite, a single coding session was no longer enough.
+
+
+## If you are searching for Loop Engineering, Codex, or Claude Code
+
+This post is not about a single prompt trick. It is about engineering the loop around AI coding agents such as OpenAI Codex, Claude Code, Cursor Agent, or any tool that can work inside a repository.
+
+The relevant keywords are: Loop Engineering, Codex orchestration, Claude Code orchestration, AI agent orchestration, multi-agent coding workflow, worktree isolation, heartbeat monitoring, and review/merge automation.
+
+If your problem is not "can the agent write code?" but "how do I safely keep several coding agents moving through a large roadmap?", this is the layer codex-orchestrator is trying to address.
 
 ## The single-agent workflow breaks down
 
@@ -158,6 +167,23 @@ In real projects, some steps still require human action: operating a payment ter
 The loop can notify, pause, and wait. It cannot replace judgment.
 
 That distinction is important. A good orchestrator does not create unsupervised chaos. It creates supervised momentum.
+
+
+## FAQ: Is this only for Codex? What about Claude Code?
+
+**Is codex-orchestrator only for OpenAI Codex?**
+
+The repository is packaged as a Codex skill, so the concrete workflow is written for Codex App sessions, Codex worktrees, and Codex heartbeat-style monitoring.
+
+But the underlying pattern is broader. Claude Code, Cursor Agent, and other coding agents run into the same operational problems: task isolation, stale sessions, parallel branches, review discipline, proof quality, and cleanup ownership.
+
+**Why mention both Codex and Claude Code?**
+
+Because the core idea is Loop Engineering for AI coding agents. Codex is the implementation surface I used first. Claude Code is another common surface where the same orchestration discipline applies.
+
+**Is this a multi-agent framework?**
+
+Not in the traditional sense. It is closer to an executable engineering runbook: how to dispatch work, monitor it, review it, merge it, and stop when human input or stronger evidence is required.
 
 ## Why I open-sourced it
 
