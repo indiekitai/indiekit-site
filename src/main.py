@@ -24,13 +24,16 @@ SITE_DESC = "独立开发者的 AI 工具包 | Resources for Indie Hackers"
 # Tools data for API and llms.txt
 TOOLS_DATA = [
     # PostgreSQL Suite — active
-    {"name": "pg-dash", "npm": "@indiekitai/pg-dash", "github": "indiekitai/pg-dash", "description": "PostgreSQL monitoring, health checks, EXPLAIN analyzer, lock monitor, migration safety — 23 MCP tools", "category": "PostgreSQL", "mcp": True},
+    {"name": "pg-dash", "npm": "@indiekitai/pg-dash", "github": "indiekitai/pg-dash", "description": "PostgreSQL monitoring, health checks, EXPLAIN analyzer, lock monitor, migration safety, pgvector health — 26 MCP tools", "category": "PostgreSQL", "mcp": True},
     {"name": "pg-safe-migrate", "npm": "@indiekitai/pg-safe-migrate", "github": "indiekitai/pg-safe-migrate", "description": "Catch unsafe PostgreSQL migrations before production. JS/TS equivalent of strong_migrations (Ruby). CI-friendly, no DB required.", "category": "PostgreSQL", "mcp": True},
     # Developer Tools — active
     {"name": "env-audit", "npm": "@indiekitai/env-audit", "github": "indiekitai/env-audit", "description": "Scan codebases for env vars, generate .env.example", "category": "Developer Tools", "mcp": True},
     {"name": "llm-context", "npm": "@indiekitai/llm-context", "github": "indiekitai/llm-context", "description": "Estimate LLM context usage for codebases", "category": "Developer Tools", "mcp": True},
     {"name": "git-standup", "npm": "@indiekitai/git-standup", "github": "indiekitai/git-standup", "description": "Generate daily standup reports from git history", "category": "Developer Tools", "mcp": True},
     {"name": "clash-init", "npm": "@indiekitai/clash-init", "github": "indiekitai/clash-init", "description": "Clash/mihomo proxy config generator", "category": "Developer Tools", "mcp": True},
+    # AI Orchestration — skills for multi-agent coordination
+    {"name": "codex-orchestrator", "github": "indiekitai/codex-orchestrator", "description": "Multi-session orchestrator for OpenAI Codex App. Splits features into parallel worktree sessions, 5-min heartbeat, stuck session recovery, continuous roadmap-driven operation. Sleep while AI codes.", "category": "AI Orchestration"},
+    {"name": "claude-orchestrator", "github": "indiekitai/claude-orchestrator", "description": "Parallel build orchestrator for Claude Code. Serial→parallel execution, worktree isolation, anti-shallow-slice gate, quality gates. 4 agents, 1400+ lines in one cycle.", "category": "AI Orchestration"},
 ]
 
 app = FastAPI(title=SITE_NAME)
@@ -182,7 +185,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
         {content}
     </main>
     <footer>
-        <p>© 2026 IndieKit.ai - Built by an AI, for indie hackers</p>
+        <p>© 2026 IndieKit.ai</p>
         <p>
             <a href="https://github.com/indiekitai" target="_blank">GitHub</a> · 
             <a href="https://x.com/indiekitai" target="_blank">Twitter</a> · 
@@ -212,7 +215,7 @@ async def home():
     <article>
         <h1>独立开发者的 AI 工具包</h1>
         <p>IndieKit 是一套为独立开发者打造的轻量级工具集合。所有工具都是开源的，你可以免费使用或自行部署。</p>
-        <p>这个网站本身也是用 AI 在一晚上搭建的 —— 包括 8 个工具和这个博客。</p>
+        <p>从 PostgreSQL 监控到 MCP Server，每个工具都在真实项目中打磨，解决我自己遇到的问题。</p>
     </article>
 
     <!-- pg-dash Landing Section -->
@@ -220,7 +223,7 @@ async def home():
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
             <span style="font-size:2rem;">🐘</span>
             <h2 style="margin:0; color:#fff; font-size:1.7rem; letter-spacing:-0.5px;">pg-dash</h2>
-            <span style="background:#4ade80; color:#14532d; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">v0.5+</span>
+            <span style="background:#4ade80; color:#14532d; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">v0.13</span>
         </div>
         <p style="margin:0 0 6px; color:#94a3b8; font-size:0.95rem;">@indiekitai/pg-dash</p>
         <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:560px;">
@@ -276,6 +279,57 @@ async def home():
                 → 完整文档
             </a>
         </div>
+    </section>
+
+    <!-- AI Orchestration Section -->
+    <section style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); color: #e0e0e0; border-radius: 12px; padding: 36px 32px; margin: 28px 0; box-shadow: 0 4px 24px rgba(0,0,0,0.18);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+            <span style="font-size:2rem;">🤖</span>
+            <h2 style="margin:0; color:#fff; font-size:1.7rem; letter-spacing:-0.5px;">AI Agent Orchestration</h2>
+            <span style="background:#818cf8; color:#fff; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">NEW</span>
+        </div>
+        <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:620px;">
+            让多个 AI Agent 并行帮你写代码。串行依赖先做，并行扇出同时推进，质量门禁逐个验收。实战产出：4 个 agent、3 个子系统、1400+ 行生产代码，一轮编排完成。
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:24px;">
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:18px 20px;">
+                <div style="font-weight:600; color:#fff; margin-bottom:6px; font-size:1.05rem;">codex-orchestrator</div>
+                <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:10px;">OpenAI Codex App</div>
+                <div style="font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
+                    持久运行的 AI 项目经理。从路线图中自动选功能，5 分钟心跳巡检，卡住不傻等——取 commit 直接验收或补发 prompt 继续。支持过夜无人值守。
+                </div>
+                <div style="margin-top:12px;">
+                    <a href="https://github.com/indiekitai/codex-orchestrator" target="_blank"
+                       style="display:inline-flex; align-items:center; gap:6px; background:#21262d; color:#c9d1d9; text-decoration:none; padding:7px 14px; border-radius:6px; font-size:0.85rem; font-weight:500; border:1px solid #30363d;">
+                        ⭐ GitHub
+                    </a>
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06); border-radius:8px; padding:18px 20px;">
+                <div style="font-weight:600; color:#fff; margin-bottom:6px; font-size:1.05rem;">claude-orchestrator</div>
+                <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:10px;">Claude Code</div>
+                <div style="font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
+                    Session 内的编排工头。串行做共享契约，再并行 fan-out 多个 agent，每个在独立 worktree 工作。有反浅切片门禁，防止 AI 产出 placeholder 代码。
+                </div>
+                <div style="margin-top:12px;">
+                    <a href="https://github.com/indiekitai/claude-orchestrator" target="_blank"
+                       style="display:inline-flex; align-items:center; gap:6px; background:#21262d; color:#c9d1d9; text-decoration:none; padding:7px 14px; border-radius:6px; font-size:0.85rem; font-weight:500; border:1px solid #30363d;">
+                        ⭐ GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:#0d1117; border-radius:8px; padding:16px 20px; font-family:monospace; font-size:0.85rem; color:#c9d1d9; margin-bottom:16px;">
+            <div style="color:#6e7681; margin-bottom:8px;"># 安装</div>
+            <div><span style="color:#79c0ff;">cp -r</span> codex-orchestrator <span style="color:#a5d6ff;">~/.codex/skills/delegated-session-orchestrator</span></div>
+            <div><span style="color:#79c0ff;">cp -r</span> claude-orchestrator <span style="color:#a5d6ff;">~/.claude/skills/build-orchestrator</span></div>
+        </div>
+
+        <p style="margin:0; color:#94a3b8; font-size:0.88rem;">
+            MIT 开源 · 复制到 skills 目录即用 · <a href="https://github.com/indiekitai/codex-orchestrator" style="color:#818cf8;" target="_blank">了解更多 →</a>
+        </p>
     </section>
 
     <h2>🔧 工具</h2>
@@ -471,7 +525,7 @@ async def tools():
             categories[cat] = []
         categories[cat].append(tool)
 
-    category_icons = {"PostgreSQL": "🐘", "Developer Tools": "🛠", "Terminal": "🎨", "Automation": "🤖", "Meta": "📦"}
+    category_icons = {"PostgreSQL": "🐘", "Developer Tools": "🛠", "Terminal": "🎨", "Automation": "🤖", "AI Orchestration": "🤖", "Meta": "📦"}
 
     for cat, tools in categories.items():
         icon = category_icons.get(cat, "📦")
@@ -639,31 +693,32 @@ async def about():
     content = '''
     <article>
         <h1>关于 IndieKit</h1>
-        <p>IndieKit 是一个由 AI 驱动的独立开发者工具集合。</p>
-        
-        <h2>起源</h2>
-        <p>2026 年 2 月 13 日，一个 AI 助手用一天时间构建了 8 个完整的工具，总计 7000+ 行代码，全部开源并发布到 PyPI。这就是 IndieKit。</p>
-        
-        <h2>理念</h2>
-        <ul>
-            <li><strong>轻量</strong>：每个工具都尽可能简单，只做一件事</li>
-            <li><strong>自托管</strong>：所有工具都可以自己部署，数据完全掌控</li>
-            <li><strong>开源</strong>：代码公开，随意修改</li>
-        </ul>
-        
+        <p>IndieKit 是我个人维护的开源开发者工具集。旗舰项目 <a href="https://github.com/indiekitai/pg-dash">pg-dash</a> 是一个 AI-native 的 PostgreSQL 监控工具，提供 23 个 MCP 工具、CI 集成、迁移安全检查和多环境对比。</p>
+
+        <h2>做这些工具的原因</h2>
+        <p>我的日常工作涉及全栈开发和基础设施运维。每次遇到重复痛点——数据库健康检查要开 pgAdmin、迁移安全要人肉 review、Schema 变更没 diff——我就把解决方案抽成工具开源出来。</p>
+        <p>所有工具都是 AI Agent 深度辅助开发的：从 Claude Code 到 Codex，我用多 agent 协作完成从设计到交付的全流程。这本身也是我感兴趣的方向——<strong>AI Agent 如何真正提升工程交付效率</strong>。</p>
+
         <h2>技术栈</h2>
         <ul>
-            <li>Python + FastAPI</li>
-            <li>JSON 文件存储（无需数据库）</li>
-            <li>Cloudflare（DNS + CDN + SSL）</li>
-            <li>DigitalOcean（服务器）</li>
+            <li><strong>TypeScript</strong>：pg-dash 及大部分 npm 工具包</li>
+            <li><strong>Python + FastAPI</strong>：本站及 Web 服务</li>
+            <li><strong>MCP (Model Context Protocol)</strong>：所有工具均提供 MCP Server</li>
+            <li><strong>PostgreSQL</strong>：核心领域</li>
+            <li><strong>DigitalOcean + Cloudflare</strong>：基础设施</li>
         </ul>
-        
-        <h2>联系</h2>
-        <p>有问题或建议？欢迎通过以下方式联系：</p>
+
+        <h2>理念</h2>
         <ul>
-            <li>Twitter: <a href="https://twitter.com/indiekitai">@indiekitai</a></li>
+            <li><strong>解决真实问题</strong>：每个工具都源于实际工作中遇到的痛点</li>
+            <li><strong>自托管优先</strong>：数据完全掌控，不依赖第三方 SaaS</li>
+            <li><strong>AI-native</strong>：从设计之初就考虑 Agent 集成，不是事后加 MCP</li>
+        </ul>
+
+        <h2>联系</h2>
+        <ul>
             <li>GitHub: <a href="https://github.com/indiekitai">github.com/indiekitai</a></li>
+            <li>Twitter: <a href="https://twitter.com/indiekitai">@indiekitai</a></li>
         </ul>
     </article>
     '''
