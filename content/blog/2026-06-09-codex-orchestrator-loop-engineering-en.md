@@ -45,6 +45,39 @@ That also sharpened my own definition of Loop Engineering. The hard part is not 
 
 Those questions matter more than getting an agent to write a few more lines of code.
 
+## Update later on June 11, 2026: v0.3.1 and the GitHub first screen
+
+I made another pass today and released `v0.3.1`. This update is not about adding
+more automation. It is about making the project understandable from the GitHub
+first screen and grounding the idea in a real, evidence-labeled case.
+
+The main changes:
+
+- The README now opens with a sharper product sentence:
+  **Codex App-first Loop Engineering for real repositories**.
+- The boundaries are explicit: this is not a daemon, not a
+  Homebrew/npm-first install path, not an agent OS, and not an unreviewed bot
+  that merges code by itself.
+- The repo now includes a sanitized TastyFuture case article showing how the
+  loop handled task contracts, worktree isolation, heartbeat reconciliation,
+  `completed-unreviewed`, review/merge/cleanup, and evidence labels in a real
+  POS project.
+
+The more I use it, the clearer the product becomes: codex-orchestrator is not
+trying to sell "more agents." It tries to turn AI coding output into reviewable,
+rejectable, recoverable engineering units that can keep moving through a
+roadmap.
+
+That is also why the onboarding path is not "install this CLI first." The more
+natural flow is:
+
+> Open Codex App inside your project, give it the GitHub repository, let Codex
+> read the docs, install the skill if needed, explain whether the helper is
+> useful, and start with a dry run.
+
+If a user has to learn a command-line tool before they understand the loop, the
+project has already drifted away from the Codex App-first idea.
+
 
 ## If you are searching for Loop Engineering, Codex, or Claude Code
 

@@ -44,6 +44,27 @@ featured: true
 
 这些问题比“让 Agent 多写几行代码”重要得多。
 
+## 2026-06-11 晚上更新：v0.3.1，把 GitHub 首屏和真实案例补齐
+
+今天又把仓库往“别人第一次看到就能理解”的方向收了一轮，发布到
+`v0.3.1`。
+
+这次不是继续堆 helper 功能，而是补上三个更重要的产品化点：
+
+- README 首屏重新组织：一句话讲清楚它是 **Codex App-first Loop Engineering for real repositories**。
+- 明确边界：它不是 daemon，不是 Homebrew/npm 优先的安装工具，不是 Agent OS，也不是不经 review 就自动合并代码的 bot。
+- 新增一篇 TastyFuture 脱敏案例文章，解释这套循环在真实 POS 项目里怎么处理 task contract、worktree 隔离、heartbeat 对账、completed-unreviewed、review/merge/cleanup 和 evidence label。
+
+我越来越觉得，codex-orchestrator 真正要卖的不是“多开几个 Agent”，而是把 AI coding 产生的工作变成可审查、可拒绝、可恢复、可继续推进的工程交付单元。
+
+这也解释了为什么我没有把入口设计成“先安装 CLI”。更自然的体验应该是：
+
+> 在你的项目里打开 Codex App，把 GitHub 地址交给它，让 Codex 自己读取仓库、安装 skill、解释 helper 是否有用，然后先做 dry run。
+
+如果用户一上来就需要学一堆命令，这个东西就已经偏离了 Codex App-first 的初衷。
+
+这次更新后，仓库里的 Quick Start、中文 README、案例文章和 release notes 基本对齐了：先让人看懂循环，再谈 helper 能提供哪些本地 ledger、status、routine 和 policy/eval 辅助。
+
 
 ## 如果你在搜 Loop Engineering / Codex / Claude Code
 
