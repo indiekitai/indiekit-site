@@ -17,6 +17,34 @@ That is the idea behind [codex-orchestrator](https://github.com/indiekitai/codex
 
 It came from a simple problem: in a real multi-module rewrite, a single coding session was no longer enough.
 
+## Update on June 11, 2026: it is no longer just a skill document
+
+After publishing this post, I used codex-orchestrator to run several more real project loops, including its own development. The project has moved beyond the initial "skill as runbook" shape. It is still Codex App-first, but it now includes a small Go helper CLI for persistent loop state and local/static verification.
+
+The new work is not about making the agent write code more aggressively. It is about making the loop observable, reviewable, and recoverable:
+
+- `.codex-orchestrator/ledger.json` records delegated task state, worktree paths, branches, pending setup ids, budgets, and review history.
+- `codex-orchestrator observe --json` classifies the queue into pending setup, active, dirty, completed-unreviewed, blocked, cleanup-needed, and cleaned.
+- `run-routine pr-reviewer` produces a local/static review checklist from ledger and git truth, including allowed paths, forbidden paths, review docs, evidence labels, and `git diff --check`.
+- `run-routine docs-drift-checker` compares runnable routines, JSON specs, and key docs, and now includes a post-merge docs drift guard.
+- `run-routine evidence-label-auditor` scans docs, review notes, and handoffs to catch local/static/proxy evidence being promoted into direct, pre, prod, device, or payment proof.
+- `policy check` plus local fixture evals turn hard-earned orchestration lessons into executable rules: do not fall back into the main checkout, do not bind a heartbeat to stale task ids, and do not upgrade weak evidence into strong proof.
+- `roadmap-next-task-suggester` checks the roadmap, routine specs, and ledger state to decide whether another safe local slice exists.
+
+So the shape is now closer to a lightweight App-first orchestration layer. Codex App still creates the worktree sessions and runs the actual workers. The helper provides persistent ledger state, repo-truth observation, routine checks, policy/eval guards, and heartbeat-friendly reports.
+
+I intentionally did not make Homebrew, npm, or package-manager installation the main path. The more natural entry point is: give the GitHub repo to Codex App, let Codex read it, install the skill, explain what the helper is for, and start with a dry run.
+
+That also sharpened my own definition of Loop Engineering. The hard part is not repeating a prompt. The hard part is answering these questions on every iteration:
+
+- What is the real state right now?
+- Which worker is ready for review?
+- Which evidence is only local/static and must not be called direct proof?
+- Did the merge leave central docs behind?
+- If the queue is empty, should the loop continue or stop and ask the human to define the next phase?
+
+Those questions matter more than getting an agent to write a few more lines of code.
+
 
 ## If you are searching for Loop Engineering, Codex, or Claude Code
 

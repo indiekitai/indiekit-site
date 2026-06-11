@@ -16,6 +16,34 @@ featured: true
 
 它不是一个很酷的玩具。它来自一个很普通但很真实的问题：一个大型项目重写到中后段以后，单个 AI coding session 开始不够用了。
 
+## 2026-06-11 更新：它已经不只是一个 skill 文档了
+
+这篇文章发出后，我又连续用 codex-orchestrator 跑了几轮真实项目和自身迭代。现在这个项目比最初的描述更进一步：它仍然是 Codex App-first 的 skill，但已经多了一层 Go helper CLI，用来保存和恢复循环状态。
+
+新增的核心不是“更自动地写代码”，而是让循环更可观察、更可审查：
+
+- `.codex-orchestrator/ledger.json` 记录 delegated task 的状态、worktree、branch、pending setup id、预算和验收历史。
+- `codex-orchestrator observe --json` 可以把当前队列归类成 pending setup、active、dirty、completed-unreviewed、blocked、cleanup-needed、cleaned。
+- `run-routine pr-reviewer` 会基于 ledger 和 git truth 做本地静态验收清单，包括 allowed / forbidden paths、review docs、证据标签和 `git diff --check`。
+- `run-routine docs-drift-checker` 会检查 runnable routine、JSON spec 和关键文档是否同步，并增加了 post-merge docs drift guard。
+- `run-routine evidence-label-auditor` 会扫描 docs / review / handoff，防止把 local/static/proxy 证据写成 direct/pre/prod/device/payment proof。
+- `policy check` 和本地 fixture eval 开始把“不要在主 checkout fallback、不要用旧 heartbeat task id、不要把弱证据升级成强证据”这些经验固化成可跑的规则。
+- `roadmap-next-task-suggester` 会根据 roadmap、routine specs 和 ledger 状态，判断还有没有安全的下一项。
+
+所以它现在更像一个很轻量的 App-first orchestration layer：Codex App 负责真正创建 worktree session 和执行任务；helper 负责持久 ledger、repo truth 观察、routine 检查、policy/eval 和 heartbeat 报告。
+
+我刻意没有把它做成 Homebrew / npm 那种先装工具再学习命令的路线。更自然的入口还是：把 GitHub 地址发给 Codex App，让 Codex 自己阅读仓库、安装 skill、解释 helper 的用途，然后先做 dry run。
+
+这也让我对 Loop Engineering 的理解更清楚了一点：Loop 的难点不是“循环执行提示词”，而是每一轮都能回答这几个问题：
+
+- 现在真实状态是什么？
+- 哪个 worker 已经可验收？
+- 哪些证据只是 local/static，不能写成 direct？
+- 合并后文档有没有漂移？
+- 如果队列空了，是继续派发，还是应该停下来等人定义下一阶段？
+
+这些问题比“让 Agent 多写几行代码”重要得多。
+
 
 ## 如果你在搜 Loop Engineering / Codex / Claude Code
 
