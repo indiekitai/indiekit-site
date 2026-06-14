@@ -32,7 +32,7 @@ TOOLS_DATA = [
     {"name": "git-standup", "npm": "@indiekitai/git-standup", "github": "indiekitai/git-standup", "description": "Generate daily standup reports from git history", "category": "Developer Tools", "mcp": True},
     {"name": "clash-init", "npm": "@indiekitai/clash-init", "github": "indiekitai/clash-init", "description": "Clash/mihomo proxy config generator", "category": "Developer Tools", "mcp": True},
     # AI Orchestration — skills for multi-agent coordination
-    {"name": "codex-orchestrator", "github": "indiekitai/codex-orchestrator", "description": "Multi-session orchestrator for OpenAI Codex App. Splits features into parallel worktree sessions, 5-min heartbeat, stuck session recovery, continuous roadmap-driven operation. Sleep while AI codes.", "category": "AI Orchestration"},
+    {"name": "codex-orchestrator", "github": "indiekitai/codex-orchestrator", "description": "Codex App-first Loop Engineering workflow. Uses isolated worktree sessions, durable ledger, status pages, heartbeat reports, review packs, evidence labels, and policy/eval guards for supervised engineering loops.", "category": "AI Orchestration"},
     {"name": "claude-orchestrator", "github": "indiekitai/claude-orchestrator", "description": "Parallel build orchestrator for Claude Code. Serial→parallel execution, worktree isolation, anti-shallow-slice gate, quality gates. 4 agents, 1400+ lines in one cycle.", "category": "AI Orchestration"},
 ]
 
@@ -297,7 +297,7 @@ async def home():
                 <div style="font-weight:600; color:#fff; margin-bottom:6px; font-size:1.05rem;">codex-orchestrator</div>
                 <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:10px;">OpenAI Codex App</div>
                 <div style="font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
-                    持久运行的 AI 项目经理。从路线图中自动选功能，5 分钟心跳巡检，卡住不傻等——取 commit 直接验收或补发 prompt 继续。支持过夜无人值守。
+                    Codex App-first 的工程编排工作流。用独立 worktree session、durable ledger、状态页、heartbeat 报告、review pack 和 evidence label，把 AI 写代码变成可巡检、可验收、可恢复的工程循环。
                 </div>
                 <div style="margin-top:12px;">
                     <a href="https://github.com/indiekitai/codex-orchestrator" target="_blank"
@@ -322,13 +322,15 @@ async def home():
         </div>
 
         <div style="background:#0d1117; border-radius:8px; padding:16px 20px; font-family:monospace; font-size:0.85rem; color:#c9d1d9; margin-bottom:16px;">
-            <div style="color:#6e7681; margin-bottom:8px;"># 安装</div>
-            <div><span style="color:#79c0ff;">cp -r</span> codex-orchestrator <span style="color:#a5d6ff;">~/.codex/skills/delegated-session-orchestrator</span></div>
+            <div style="color:#6e7681; margin-bottom:8px;"># Codex App-first 用法</div>
+            <div><span style="color:#8b949e;">把仓库地址交给 Codex App，让它读取 README，安装或更新 skill，然后先做 dry run。</span></div>
+            <div><span style="color:#79c0ff;">https://github.com/indiekitai/codex-orchestrator</span></div>
+            <div style="margin-top:12px; color:#6e7681;"># Claude Code 版本</div>
             <div><span style="color:#79c0ff;">cp -r</span> claude-orchestrator <span style="color:#a5d6ff;">~/.claude/skills/build-orchestrator</span></div>
         </div>
 
         <p style="margin:0; color:#94a3b8; font-size:0.88rem;">
-            MIT 开源 · 复制到 skills 目录即用 · <a href="https://github.com/indiekitai/codex-orchestrator" style="color:#818cf8;" target="_blank">了解更多 →</a>
+            MIT 开源 · Codex App-first · <a href="https://github.com/indiekitai/codex-orchestrator" style="color:#818cf8;" target="_blank">了解更多 →</a>
         </p>
     </section>
 
