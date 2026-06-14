@@ -5,6 +5,7 @@ description: "A practical Loop Engineering workflow for Codex, Claude Code, AI c
 tags: ["AI Coding", "Codex", "Claude Code", "Loop Engineering", "AI Agent Orchestration", "Open Source"]
 lang: en
 featured: true
+hidden: true
 ---
 
 I recently read Addy Osmani's piece on [Loop Engineering](https://x.com/addyosmani/status/2064127981161959567), and it immediately matched something I had been building in practice.

@@ -4,6 +4,7 @@ date: 2026-06-09
 description: "Loop Engineering 实战：我如何把 Codex / Claude Code 从单个写代码助手，组织成 worktree 隔离、heartbeat 巡检、可验收合并的多 Agent 工程循环。"
 tags: ["AI编程", "Codex", "Claude Code", "Loop Engineering", "AI Agent Orchestration", "开源"]
 featured: true
+hidden: true
 ---
 
 最近刷到 Addy Osmani 写的 [Loop Engineering](https://x.com/addyosmani/status/2064127981161959567)，第一反应是：这几乎就是我最近一段时间在真实项目里摸出来的东西。

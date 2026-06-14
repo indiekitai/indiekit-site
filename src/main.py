@@ -58,10 +58,16 @@ def load_posts() -> list[dict]:
             "date": post.get("date", ""),
             "description": post.get("description", ""),
             "tags": post.get("tags", []),
+            "hidden": bool(post.get("hidden", False)),
             "content": post.content,
         })
     
     return posts
+
+
+def visible_posts() -> list[dict]:
+    """Posts that should appear in public indexes and feeds."""
+    return [p for p in load_posts() if not p.get("hidden")]
 
 
 def render_html(title: str, content: str, description: str = "", canonical: str = "") -> str:
@@ -199,7 +205,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
-    posts = load_posts()[:3]
+    posts = visible_posts()[:3]
     
     posts_html = ""
     for p in posts:
@@ -390,7 +396,7 @@ async def home():
 
 @app.get("/blog", response_class=HTMLResponse)
 async def blog_list():
-    posts = load_posts()
+    posts = visible_posts()
     
     posts_html = ""
     for p in posts:
@@ -736,7 +742,7 @@ async def health():
 # Sitemap for SEO
 @app.get("/sitemap.xml")
 async def sitemap():
-    posts = load_posts()
+    posts = visible_posts()
     
     urls = [
         f"<url><loc>{SITE_URL}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>",
@@ -763,7 +769,7 @@ async def sitemap():
 @app.get("/rss.xml")
 async def rss_feed():
     from fastapi.responses import Response
-    posts = load_posts()
+    posts = visible_posts()
     
     items = []
     for p in posts[:20]:  # Last 20 posts
@@ -882,7 +888,7 @@ Latest posts at https://indiekit.ai/blog
 @app.get("/llms-full.txt")
 async def llms_full():
     from fastapi.responses import PlainTextResponse
-    posts = load_posts()
+    posts = visible_posts()
     
     content = f"""# IndieKit.ai - 完整内容
 
@@ -916,7 +922,7 @@ async def api_tools():
 
 @app.get("/api/blog")
 async def api_blog():
-    posts = load_posts()
+    posts = visible_posts()
     return {"posts": [
         {"slug": p["slug"], "title": p["title"], "date": str(p["date"]), "tags": p["tags"], "url": f"{SITE_URL}/blog/{p['slug']}"}
         for p in posts
