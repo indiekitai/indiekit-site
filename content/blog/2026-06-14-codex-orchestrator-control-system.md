@@ -6,6 +6,8 @@ tags: ["AI编程", "Codex", "Loop Engineering", "AI Agent", "工程实践", "开
 featured: true
 ---
 
+[English version](/blog/2026-06-14-codex-orchestrator-control-system-en)
+
 最近几周，我越来越强烈地感觉到：AI 编程的瓶颈已经不只是模型能力。
 
 模型当然还有差距。不同模型在推理、代码风格、上下文稳定性上都不一样。但对很多真实工程任务来说，今天的模型已经“够能干”了。真正难的是另一件事：
@@ -249,4 +251,3 @@ codex-orchestrator 的由来，其实不是“我想做一个开源工具”。
 如果你也在用 Codex App 做真实项目，而不是只做一次性小任务，可以试试：
 
 [github.com/indiekitai/codex-orchestrator](https://github.com/indiekitai/codex-orchestrator)
-
