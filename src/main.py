@@ -31,9 +31,9 @@ TOOLS_DATA = [
     {"name": "llm-context", "npm": "@indiekitai/llm-context", "github": "indiekitai/llm-context", "description": "Estimate LLM context usage for codebases", "category": "Developer Tools", "mcp": True},
     {"name": "git-standup", "npm": "@indiekitai/git-standup", "github": "indiekitai/git-standup", "description": "Generate daily standup reports from git history", "category": "Developer Tools", "mcp": True},
     {"name": "clash-init", "npm": "@indiekitai/clash-init", "github": "indiekitai/clash-init", "description": "Clash/mihomo proxy config generator", "category": "Developer Tools", "mcp": True},
-    # AI Orchestration — skills for multi-agent coordination
-    {"name": "codex-orchestrator", "github": "indiekitai/codex-orchestrator", "description": "Codex App-first Loop Engineering workflow. Uses isolated worktree sessions, durable ledger, status pages, heartbeat reports, review packs, evidence labels, and policy/eval guards for supervised engineering loops.", "category": "AI Orchestration"},
-    {"name": "claude-orchestrator", "github": "indiekitai/claude-orchestrator", "description": "Parallel build orchestrator for Claude Code. Serial→parallel execution, worktree isolation, anti-shallow-slice gate, quality gates. 4 agents, 1400+ lines in one cycle.", "category": "AI Orchestration"},
+    # AI Orchestration — harnesses for supervised coding-agent loops
+    {"name": "codex-orchestrator", "github": "indiekitai/codex-orchestrator", "description": "Codex App-first engineering harness for Loop Engineering. Plans feature packages, dispatches isolated worktree sessions, tracks ledger/status truth, reviews evidence, merges accepted branches, and keeps local/proxy/direct/blocked labels separate.", "category": "AI Orchestration"},
+    {"name": "claude-orchestrator", "github": "indiekitai/claude-orchestrator", "description": "Claude Code workflow harness inspired by codex-orchestrator. Uses serial planning, worktree isolation, anti-shallow-slice checks, quality gates, and reviewer-owned merge discipline for terminal-first Claude Code projects.", "category": "AI Orchestration"},
 ]
 
 app = FastAPI(title=SITE_NAME)
@@ -58,6 +58,7 @@ def load_posts() -> list[dict]:
             "date": post.get("date", ""),
             "description": post.get("description", ""),
             "tags": post.get("tags", []),
+            "lang": post.get("lang", "zh-CN"),
             "hidden": bool(post.get("hidden", False)),
             "content": post.content,
         })
@@ -70,10 +71,10 @@ def visible_posts() -> list[dict]:
     return [p for p in load_posts() if not p.get("hidden")]
 
 
-def render_html(title: str, content: str, description: str = "", canonical: str = "") -> str:
+def render_html(title: str, content: str, description: str = "", canonical: str = "", lang: str = "zh-CN") -> str:
     """Render HTML page with SEO meta tags."""
     return f'''<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{lang}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -295,7 +296,7 @@ async def home():
             <span style="background:#818cf8; color:#fff; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:99px; letter-spacing:0.5px;">NEW</span>
         </div>
         <p style="margin:0 0 20px; color:#cbd5e1; font-size:1.05rem; max-width:620px;">
-            让多个 AI Agent 并行帮你写代码。串行依赖先做，并行扇出同时推进，质量门禁逐个验收。实战产出：4 个 agent、3 个子系统、1400+ 行生产代码，一轮编排完成。
+            给 Codex App 和 Claude Code 加一层工程 harness：先定义功能包和边界，再派隔离 worktree worker；用 ledger、状态页、heartbeat、review pack 和 evidence labels 让 AI 编程循环可巡检、可验收、可恢复。
         </p>
 
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:24px;">
@@ -303,7 +304,7 @@ async def home():
                 <div style="font-weight:600; color:#fff; margin-bottom:6px; font-size:1.05rem;">codex-orchestrator</div>
                 <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:10px;">OpenAI Codex App</div>
                 <div style="font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
-                    Codex App-first 的工程编排工作流。用独立 worktree session、durable ledger、状态页、heartbeat 报告、review pack 和 evidence label，把 AI 写代码变成可巡检、可验收、可恢复的工程循环。
+                    Codex App-first 的 Loop Engineering harness。规划功能包，派发隔离 worktree session，记录 ledger/status truth，审查证据后再 merge/push/cleanup，并严格区分 local / proxy / direct / blocked。
                 </div>
                 <div style="margin-top:12px;">
                     <a href="https://github.com/indiekitai/codex-orchestrator" target="_blank"
@@ -316,7 +317,7 @@ async def home():
                 <div style="font-weight:600; color:#fff; margin-bottom:6px; font-size:1.05rem;">claude-orchestrator</div>
                 <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:10px;">Claude Code</div>
                 <div style="font-size:0.9rem; color:#cbd5e1; line-height:1.6;">
-                    Session 内的编排工头。串行做共享契约，再并行 fan-out 多个 agent，每个在独立 worktree 工作。有反浅切片门禁，防止 AI 产出 placeholder 代码。
+                    面向 Claude Code 的终端优先版本。用串行规划、worktree 隔离、反浅切片检查和质量 gate，把多个 Claude worker 的产出变成可审查、可拒绝、可合并的分支。
                 </div>
                 <div style="margin-top:12px;">
                     <a href="https://github.com/indiekitai/claude-orchestrator" target="_blank"
@@ -436,12 +437,19 @@ async def blog_post(slug: str):
     post_url = f"{SITE_URL}/blog/{slug}"
     share_text = post['title'].replace('"', '&quot;')
     
+    article_lang = post.get("lang", "zh-CN")
     json_ld = json.dumps({
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": post['title'],
+        "description": post.get("description", ""),
         "datePublished": str(post['date']),
+        "dateModified": str(post['date']),
+        "inLanguage": article_lang,
+        "keywords": post.get("tags", []),
+        "mainEntityOfPage": {"@type": "WebPage", "@id": post_url},
         "author": {"@type": "Organization", "name": "IndieKit"},
+        "publisher": {"@type": "Organization", "name": "IndieKit", "url": SITE_URL},
         "url": post_url,
     }, ensure_ascii=False)
 
@@ -460,7 +468,7 @@ async def blog_post(slug: str):
     </article>
     '''
     
-    return render_html(post['title'], content, post['description'], post_url)
+    return render_html(post['title'], content, post['description'], post_url, article_lang)
 
 
 @app.get("/tools", response_class=HTMLResponse)
@@ -864,6 +872,15 @@ async def llms_txt():
 ### Automation
 - [trello-autopilot](https://indiekit.ai/tools#trello-autopilot): Scan Trello bug cards → invoke Claude Code to fix → move card to Done. Full pipeline: `npx @indiekitai/trello-autopilot --board MyProject --list Bugs --repo ./code`. Supports dry-run, custom agents, MCP Server with scan_bugs/fix_bug/move_card tools.
 - [pi-skills](https://indiekit.ai/tools#pi-skills): All 16 tools as Pi/Claude Code skills. One install: `pi install npm:@indiekitai/pi-skills`
+
+### AI Orchestration
+- [codex-orchestrator](https://github.com/indiekitai/codex-orchestrator): Codex App-first engineering harness for Loop Engineering. It plans feature packages, dispatches isolated worktree sessions, keeps durable ledger/status truth, monitors with heartbeats, reviews evidence, merges accepted branches, cleans up worktrees, and keeps local/proxy/direct/blocked evidence labels separate.
+- [claude-orchestrator](https://github.com/indiekitai/claude-orchestrator): Claude Code workflow harness inspired by codex-orchestrator. It adapts package planning, worktree isolation, anti-shallow-slice checks, quality gates, and reviewer-owned merge discipline to Claude Code's terminal-first workflow.
+
+## Codex Orchestrator Articles
+
+- [AI 编程不缺模型，缺的是外层控制系统](https://indiekit.ai/blog/2026-06-14-codex-orchestrator-control-system): Chinese article about why codex-orchestrator was created from a real project orchestration workflow.
+- [AI Coding Does Not Need More Model Hype. It Needs Control Systems.](https://indiekit.ai/blog/2026-06-14-codex-orchestrator-control-system-en): English article about the Codex App-first control layer behind codex-orchestrator.
 
 ## MCP Server
 
