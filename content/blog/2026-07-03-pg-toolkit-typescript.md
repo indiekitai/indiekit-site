@@ -85,7 +85,7 @@ Not "AI-powered" (no LLMs inside). Just well-structured tools that AI agents can
 npx @indiekitai/pg-toolkit doctor postgres://localhost/mydb
 ```
 
-npm: https://www.npmjs.com/package/@indiekitai/pg-toolkit
+GitHub: https://github.com/indiekitai/pg-toolkit · npm: https://www.npmjs.com/package/@indiekitai/pg-toolkit
 
 ---
 
