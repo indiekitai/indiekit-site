@@ -17,6 +17,7 @@ import json
 load_dotenv()
 
 CONTENT_DIR = Path(__file__).parent.parent / "content"
+STATIC_DIR = Path(__file__).parent.parent / "static"
 SITE_URL = os.getenv("SITE_URL", "https://indiekit.ai")
 SITE_NAME = "IndieKit"
 SITE_DESC = "独立开发者的 AI 工具包 | Resources for Indie Hackers"
@@ -37,6 +38,10 @@ TOOLS_DATA = [
 ]
 
 app = FastAPI(title=SITE_NAME)
+
+# 挂载静态资源（og-cover.png 等社交分享图）
+STATIC_DIR.mkdir(exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Markdown processor
 md = markdown.Markdown(extensions=['fenced_code', 'tables', 'toc'])
@@ -71,8 +76,17 @@ def visible_posts() -> list[dict]:
     return [p for p in load_posts() if not p.get("hidden")]
 
 
-def render_html(title: str, content: str, description: str = "", canonical: str = "", lang: str = "zh-CN") -> str:
+def render_html(title: str, content: str, description: str = "", canonical: str = "", lang: str = "zh-CN",
+                og_type: str = "website", extra_head: str = "", article_date: str = "", article_tags: list = None) -> str:
     """Render HTML page with SEO meta tags."""
+    # 文章专属 article:* meta（仅 og_type=article 时输出）
+    _article_meta = ""
+    if og_type == "article":
+        if article_date:
+            _article_meta += f'    <meta property="article:published_time" content="{article_date}">\n'
+        for _tag in (article_tags or []):
+            _article_meta += f'    <meta property="article:tag" content="{_tag}">\n'
+
     return f'''<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -82,19 +96,22 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
     <meta name="description" content="{description or SITE_DESC}">
     <link rel="canonical" href="{canonical or SITE_URL}">
     <link rel="alternate" type="application/rss+xml" title="{SITE_NAME} RSS" href="{SITE_URL}/feed.xml">
-    
+
     <!-- Open Graph -->
     <meta property="og:title" content="{title}">
     <meta property="og:description" content="{description or SITE_DESC}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{og_type}">
     <meta property="og:url" content="{canonical or SITE_URL}">
-    
+    <meta property="og:image" content="{SITE_URL}/static/og-cover.png">
+    <meta property="og:image:alt" content="{title} | {SITE_NAME}">
+{_article_meta}
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{title}">
     <meta name="twitter:description" content="{description or SITE_DESC}">
-    
-    <!-- Google Analytics -->
+    <meta name="twitter:image" content="{SITE_URL}/static/og-cover.png">
+
+{extra_head}    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1QHNTKJ27T"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -207,7 +224,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
 @app.get("/", response_class=HTMLResponse)
 async def home():
     posts = visible_posts()[:3]
-    
+
     posts_html = ""
     for p in posts:
         posts_html += f'''
@@ -217,8 +234,32 @@ async def home():
             <p>{p['description']}</p>
         </li>
         '''
-    
+
+    # GEO：Organization + WebSite 结构化数据
+    _home_jsonld = json.dumps({
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "name": SITE_NAME,
+                "url": SITE_URL,
+                "logo": f"{SITE_URL}/static/og-cover.png",
+                "sameAs": [
+                    "https://github.com/indiekitai",
+                    "https://twitter.com/indiekitai"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "name": SITE_NAME,
+                "url": SITE_URL,
+                "description": SITE_DESC
+            }
+        ]
+    }, ensure_ascii=False)
+
     content = f'''
+    <script type="application/ld+json">{_home_jsonld}</script>
     <article>
         <h1>独立开发者的 AI 工具包</h1>
         <p>IndieKit 是一套为独立开发者打造的轻量级工具集合。所有工具都是开源的，你可以免费使用或自行部署。</p>
@@ -438,19 +479,77 @@ async def blog_post(slug: str):
     share_text = post['title'].replace('"', '&quot;')
     
     article_lang = post.get("lang", "zh-CN")
+    # 规范化 lang（zh → zh-CN）
+    if article_lang == "zh":
+        article_lang = "zh-CN"
+
+    # hreflang 配对逻辑：-en / -zh 后缀互指，或基础 slug 查找对应版本
+    blog_dir = CONTENT_DIR / "blog"
+    hreflang_html = ""
+    if slug.endswith("-en"):
+        _base = slug[:-3]  # 去掉 -en
+        if (blog_dir / f"{_base}.md").exists():
+            _en_url = f"{SITE_URL}/blog/{slug}"
+            _zh_url = f"{SITE_URL}/blog/{_base}"
+            hreflang_html = (
+                f'    <link rel="alternate" hreflang="en" href="{_en_url}">\n'
+                f'    <link rel="alternate" hreflang="zh-CN" href="{_zh_url}">\n'
+                f'    <link rel="alternate" hreflang="x-default" href="{_en_url}">\n'
+            )
+    elif slug.endswith("-zh"):
+        _base = slug[:-3]  # 去掉 -zh
+        if (blog_dir / f"{_base}.md").exists():
+            _en_url = f"{SITE_URL}/blog/{_base}"
+            _zh_url = f"{SITE_URL}/blog/{slug}"
+            hreflang_html = (
+                f'    <link rel="alternate" hreflang="en" href="{_en_url}">\n'
+                f'    <link rel="alternate" hreflang="zh-CN" href="{_zh_url}">\n'
+                f'    <link rel="alternate" hreflang="x-default" href="{_en_url}">\n'
+            )
+    else:
+        if (blog_dir / f"{slug}-en.md").exists():
+            _en_url = f"{SITE_URL}/blog/{slug}-en"
+            _zh_url = f"{SITE_URL}/blog/{slug}"
+            hreflang_html = (
+                f'    <link rel="alternate" hreflang="zh-CN" href="{_zh_url}">\n'
+                f'    <link rel="alternate" hreflang="en" href="{_en_url}">\n'
+                f'    <link rel="alternate" hreflang="x-default" href="{_en_url}">\n'
+            )
+        elif (blog_dir / f"{slug}-zh.md").exists():
+            _en_url = f"{SITE_URL}/blog/{slug}"
+            _zh_url = f"{SITE_URL}/blog/{slug}-zh"
+            hreflang_html = (
+                f'    <link rel="alternate" hreflang="en" href="{_en_url}">\n'
+                f'    <link rel="alternate" hreflang="zh-CN" href="{_zh_url}">\n'
+                f'    <link rel="alternate" hreflang="x-default" href="{_en_url}">\n'
+            )
+
+    # BlogPosting + BreadcrumbList 结构化数据
     json_ld = json.dumps({
         "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": post['title'],
-        "description": post.get("description", ""),
-        "datePublished": str(post['date']),
-        "dateModified": str(post['date']),
-        "inLanguage": article_lang,
-        "keywords": post.get("tags", []),
-        "mainEntityOfPage": {"@type": "WebPage", "@id": post_url},
-        "author": {"@type": "Organization", "name": "IndieKit"},
-        "publisher": {"@type": "Organization", "name": "IndieKit", "url": SITE_URL},
-        "url": post_url,
+        "@graph": [
+            {
+                "@type": "Article",
+                "headline": post['title'],
+                "description": post.get("description", ""),
+                "datePublished": str(post['date']),
+                "dateModified": str(post['date']),
+                "inLanguage": article_lang,
+                "keywords": post.get("tags", []),
+                "mainEntityOfPage": {"@type": "WebPage", "@id": post_url},
+                "author": {"@type": "Organization", "name": "IndieKit"},
+                "publisher": {"@type": "Organization", "name": "IndieKit", "url": SITE_URL},
+                "url": post_url,
+            },
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "首页", "item": SITE_URL},
+                    {"@type": "ListItem", "position": 2, "name": "博客", "item": f"{SITE_URL}/blog"},
+                    {"@type": "ListItem", "position": 3, "name": post['title'], "item": post_url},
+                ]
+            }
+        ]
     }, ensure_ascii=False)
 
     content = f'''
@@ -468,12 +567,34 @@ async def blog_post(slug: str):
     </article>
     '''
     
-    return render_html(post['title'], content, post['description'], post_url, article_lang)
+    return render_html(post['title'], content, post['description'], post_url, article_lang,
+                       og_type="article", extra_head=hreflang_html,
+                       article_date=str(post['date']), article_tags=post.get('tags', []))
 
 
 @app.get("/tools", response_class=HTMLResponse)
 async def tools():
-    content = '''
+    # GEO：每个工具输出 SoftwareApplication 结构化数据
+    _tools_jsonld_items = []
+    for _t in TOOLS_DATA:
+        _item = {
+            "@type": "SoftwareApplication",
+            "name": _t["name"],
+            "description": _t["description"],
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        }
+        if _t.get("github"):
+            _item["url"] = f"https://github.com/{_t['github']}"
+        _tools_jsonld_items.append(_item)
+    _tools_jsonld = json.dumps(
+        {"@context": "https://schema.org", "@graph": _tools_jsonld_items},
+        ensure_ascii=False
+    )
+
+    content = f'<script type="application/ld+json">{_tools_jsonld}</script>\n'
+    content += '''
     <h1>工具</h1>
     <p>所有工具都是免费使用的。轻量、快速、无需注册。</p>
     
