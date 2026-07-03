@@ -198,6 +198,7 @@ def render_html(title: str, content: str, description: str = "", canonical: str 
         <nav>
             <a href="/">首页</a>
             <a href="/blog">博客</a>
+            <a href="/digest">周刊</a>
             <a href="/tools">工具</a>
             <a href="/mcp">MCP</a>
             <a href="/api">API</a>
@@ -570,6 +571,78 @@ async def blog_post(slug: str):
     return render_html(post['title'], content, post['description'], post_url, article_lang,
                        og_type="article", extra_head=hreflang_html,
                        article_date=str(post['date']), article_tags=post.get('tags', []))
+
+
+def load_digests() -> list[dict]:
+    """Load weekly digest issues from content/digest/"""
+    digests = []
+    digest_dir = CONTENT_DIR / "digest"
+
+    if not digest_dir.exists():
+        return digests
+
+    for f in sorted(digest_dir.glob("*.md"), reverse=True):
+        issue = frontmatter.load(f)
+        digests.append({
+            "slug": f.stem,
+            "title": issue.get("title", f.stem),
+            "date": issue.get("date", ""),
+            "description": issue.get("description", ""),
+            "hidden": bool(issue.get("hidden", False)),
+            "content": issue.content,
+        })
+
+    return [d for d in digests if not d["hidden"]]
+
+
+@app.get("/digest", response_class=HTMLResponse)
+async def digest_list():
+    issues = load_digests()
+
+    issues_html = ""
+    for d in issues:
+        issues_html += f'''
+        <li>
+            <h2><a href="/digest/{d['slug']}">{d['title']}</a></h2>
+            <div class="meta">{d['date']}</div>
+            <p>{d['description']}</p>
+        </li>
+        '''
+
+    content = f'''
+    <h1>周刊</h1>
+    <p>每周精选：HN 热帖与 GitHub 趋势里真正值得看的东西，附点评。长文观点在<a href="/blog">博客</a>。</p>
+    <ul class="post-list">
+        {issues_html if issues_html else '<li>第一期正在路上...</li>'}
+    </ul>
+    '''
+
+    return render_html("周刊", content, "IndieKit 周刊：每周精选 HN 热帖与 GitHub 趋势，附点评", f"{SITE_URL}/digest")
+
+
+@app.get("/digest/{slug}", response_class=HTMLResponse)
+async def digest_issue(slug: str):
+    issues = load_digests()
+    issue = next((d for d in issues if d['slug'] == slug), None)
+
+    if not issue:
+        raise HTTPException(status_code=404, detail="该期不存在")
+
+    md.reset()
+    html_content = md.convert(issue['content'])
+
+    issue_url = f"{SITE_URL}/digest/{slug}"
+    content = f'''
+    <article>
+        <h1>{issue['title']}</h1>
+        <div class="meta">{issue['date']}</div>
+        {html_content}
+    </article>
+    <p><a href="/digest">← 全部周刊</a></p>
+    '''
+
+    return render_html(issue['title'], content, issue['description'], issue_url,
+                       og_type="article", article_date=str(issue['date']))
 
 
 @app.get("/tools", response_class=HTMLResponse)
